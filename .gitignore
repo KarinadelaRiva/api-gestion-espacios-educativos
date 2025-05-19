@@ -1,9 +1,26 @@
 HELP.md
-target/
+
+### Archivos de compilación ###
+/target/
 *.class
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+/out/
+
+### Archivos generados por test ###
+surefire-reports/
+jacoco.exec
+
+### Configuración sensible local de Spring Boot ###
+src/main/resources/application.properties
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### Maven ###
+!**/src/main/**/.gitkeep
+!**/src/test/**/.gitkeep
 
 ### STS ###
 .apt_generated
@@ -13,26 +30,6 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-# Carpeta de out (compilaciones locales)
-/out/
-
-# Maven
-!**/src/main/**/.gitkeep
-!**/src/test/**/.gitkeep
-
-# Ignorar configuración sensible local de Spring Boot
-src/main/resources/application.properties
-
-# Archivos generados por test
-surefire-reports/
-jacoco.exec
 
 ### NetBeans ###
 /nbproject/private/
