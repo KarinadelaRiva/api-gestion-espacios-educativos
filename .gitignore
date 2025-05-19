@@ -24,7 +24,6 @@ target/
 /out/
 
 # Maven
-.mvn/
 !**/src/main/**/.gitkeep
 !**/src/test/**/.gitkeep
 
