@@ -20,7 +20,8 @@ public class Aula {
     private Long id;
 
     @Column(
-            nullable = false
+            nullable = false,
+            unique = true
     )
     private Integer numero;
 
