@@ -16,7 +16,7 @@ public class Asignatura {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(
             name = "nombre_asignatura",
@@ -29,17 +29,21 @@ public class Asignatura {
             nullable = false,
             unique = true
     )
-    private int codigo;
+    private Integer codigo;
 
     @Column(
             nullable = false
     )
-    private boolean requiereLaboratorio;
+    private Boolean requiereLaboratorio;
 
     @OneToMany(
             mappedBy = "asignatura", // Nombre de la propiedad en la clase Inscripcion que hace referencia a Asignatura
             cascade = CascadeType.ALL, // Permite que se eliminen las inscripciones asociadas a la asignatura
-            fetch = FetchType.LAZY // Carga perezosa para evitar cargar todas las inscripciones al cargar la asignatura
+            fetch = FetchType.EAGER // Cuando se carga la asignatura, se cargan todas las inscripciones asociadas a la asignatura
+    )
+    @JoinColumn(
+            name = "asignatura_id",
+            referencedColumnName = "id"
     )
     private List<Inscripcion> inscripciones;
 }
