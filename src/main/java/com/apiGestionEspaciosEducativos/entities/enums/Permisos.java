@@ -1,4 +1,4 @@
-package com.apigestionaulas.apigestionaulas.entities.enums;
+package com.apiGestionEspaciosEducativos.entities.enums;
 
 public enum Permisos {
     CREAR_ESPACIO, ELIMINAR_ESPACIO, MODIFICAR_ESPACIO, VER_ESPACIOS, VER_AULAS, VER_LABORATORIOS,

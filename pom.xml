@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.apigestionaulas</groupId>
-	<artifactId>api-gestion-aulas</artifactId>
+	<artifactId>api-gestion-espacios-educativos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>api-gestion-aulas</name>
 	<description>API REST para realizar la Gestion de Aulas desarrollada con SpringBoot</description>
@@ -63,6 +63,12 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.5.0</version>
 		</dependency>
 	</dependencies>
 

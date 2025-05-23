@@ -1,4 +1,4 @@
-package com.apigestionaulas.apigestionaulas.entities.enums;
+package com.apiGestionEspaciosEducativos.entities.enums;
 
 public enum EstadoSolicitud {
     PENDIENTE,

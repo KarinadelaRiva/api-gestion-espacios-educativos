@@ -1,4 +1,4 @@
-package com.apigestionaulas.apigestionaulas.entities;
+package com.apiGestionEspaciosEducativos.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +11,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"codigo", "id"})
 @Builder
 public class Asignatura {
 
@@ -45,5 +46,5 @@ public class Asignatura {
             name = "asignatura_id",
             referencedColumnName = "id"
     )
-    private List<Inscripcion> inscripciones;
+    private List<com.apigestionaulas.apigestionaulas.entities.Inscripcion> inscripciones;
 }

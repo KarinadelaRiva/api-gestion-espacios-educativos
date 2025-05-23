@@ -1,4 +1,4 @@
-package com.apigestionaulas.apigestionaulas.entities;
+package com.apiGestionEspaciosEducativos.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +11,7 @@ import java.util.List;
 @ToString(exclude = "usuario")
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id", "matricula"})
 @Builder
 public class Profesor {
 

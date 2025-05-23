@@ -1,4 +1,4 @@
-package com.apigestionaulas.apigestionaulas.entities;
+package com.apiGestionEspaciosEducativos.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @ToString(exclude = {"profesor", "asignatura"})
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id", "asignatura", "comision", "profesor"})
 @Builder
 public class Inscripcion {
 
@@ -22,7 +23,15 @@ public class Inscripcion {
             nullable = false
     )
     private Integer cantidadAlumnos;
+
+    @Column(
+            nullable = false
+    )
     private Integer margenAlumnos;
+
+    @Column(
+            nullable = false
+    )
     private LocalDate fechaFinInscripcion;
 
     @Column(
@@ -39,7 +48,7 @@ public class Inscripcion {
             referencedColumnName = "id",
             nullable = false
     )
-    private Profesor profesor;
+    private com.apigestionaulas.apigestionaulas.entities.Profesor profesor;
 
     @ManyToOne(
             cascade = CascadeType.ALL,
