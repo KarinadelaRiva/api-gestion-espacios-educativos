@@ -39,16 +39,20 @@ public class Inscripcion {
     )
     private String comision;
 
+    /**
+     * * Relación con la entidad Usuario
+     * validar que sea del tipo profesor al dar del alta una inscripción
+     */
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "profesor_id",
+            name = "usuario_id",
             referencedColumnName = "id",
             nullable = false
     )
-    private Profesor profesor;
+    private Usuario profesor;
 
     @ManyToOne(
             cascade = CascadeType.ALL,

@@ -11,9 +11,9 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
+@Builder
 @DiscriminatorValue("LABORATORIO")
-public class Laboratorio extends Aula {
+public class Laboratorio extends Espacio {
     @Column(
             name = "cantidad_computadoras"
     )

@@ -34,7 +34,7 @@ public class SolicitudCambioAula {
 
     @ManyToOne
     @JoinColumn(name = "nueva_aula_id", nullable = false)
-    private Aula nuevaAula;
+    private Espacio nuevaAula;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

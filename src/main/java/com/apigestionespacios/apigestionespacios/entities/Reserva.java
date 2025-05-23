@@ -30,7 +30,7 @@ public class Reserva {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aula_id", nullable = false)
-    private Aula aula;
+    private Espacio aula;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inscripcion_id", nullable = false)
