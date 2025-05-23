@@ -1,9 +1,6 @@
 package com.apiGestionEspaciosEducativos.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Usuario {
@@ -15,5 +12,10 @@ public class Usuario {
 
     private String password;
 
-    private String rol;
-}
+    @ManyToOne
+    @JoinColumn(name = "rol_id", nullable = false)
+    private Rol rol;
+
+    @OneToOne(mappedBy = "usuario")
+    private Profesor profesor;
+} 
