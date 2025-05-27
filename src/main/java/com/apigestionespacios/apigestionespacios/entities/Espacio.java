@@ -43,7 +43,7 @@ public abstract class Espacio {
     private Boolean tieneTV;
 
     @OneToMany(
-            mappedBy = "aula", // Nombre de la propiedad en la clase Reserva que hace referencia a Aula
+            mappedBy = "espacio", // Nombre de la propiedad en la clase Reserva que hace referencia a Aula
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a el aula si se elimina el aula
             fetch = FetchType.EAGER // Cuando se carga el aula, se cargan todas las reservas asociadas a el aula
     )

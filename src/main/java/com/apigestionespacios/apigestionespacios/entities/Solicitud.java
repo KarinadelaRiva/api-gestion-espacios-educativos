@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
 
+import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
 import com.apigestionespacios.apigestionespacios.entities.enums.TipoSolicitud;
 import jakarta.persistence.*;
@@ -8,7 +9,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Builder
-public class SolicitudCambioAula {
+public class Solicitud {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,26 +30,32 @@ public class SolicitudCambioAula {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "reserva_original_id", nullable = false)
+    @JoinColumn(name = "reserva_original_id")
     private Reserva reservaOriginal;
 
     @ManyToOne
-    @JoinColumn(name = "nueva_aula_id", nullable = false)
-    private Espacio nuevaAula;
+    @JoinColumn(name = "nuevo_espacio_id", nullable = false)
+    private Espacio nuevoEspacio;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EstadoSolicitud estado;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_solicitud", nullable = false)
-    private TipoSolicitud tipoSolicitud;
 
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DiaSemana diaSemana;
+
+    @Column(nullable = false)
+    private LocalTime horaInicio;
+
+    @Column(nullable = false)
+    private LocalTime horaFin;
 
     @Column(name = "comentario_estado", columnDefinition = "TEXT")
     private String comentarioEstado;
@@ -59,8 +66,12 @@ public class SolicitudCambioAula {
     @Column(name = "fecha_hora_solicitud", nullable = false)
     private LocalDateTime fechaHoraSolicitud;
 
-    // Días y bloques asociados a la solicitud
-    @OneToMany(mappedBy = "solicitud", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SolicitudBloque> bloques;
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(name = "inscripcion_id", nullable = false)
+    private Inscripcion inscripcion;
+
 }
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,11 +28,6 @@ public class Inscripcion {
     @Column(
             nullable = false
     )
-    private Integer margenAlumnos;
-
-    @Column(
-            nullable = false
-    )
     private LocalDate fechaFinInscripcion;
 
     @Column(
@@ -48,7 +44,7 @@ public class Inscripcion {
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "usuario_id",
+            name = "usuario_profesor_id",
             referencedColumnName = "id",
             nullable = false
     )
@@ -64,4 +60,12 @@ public class Inscripcion {
             nullable = false
     )
     private Asignatura asignatura;
+
+    @OneToMany
+    (
+            mappedBy = "inscripcion", // Nombre de la propiedad en la clase Reserva que hace referencia a Inscripcion
+            cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a la inscripción si se elimina la inscripción
+            fetch = FetchType.EAGER // Cuando se carga la inscripción, se cargan todas las reservas asociadas a la inscripción
+    )
+    private List<Solicitud> solicitudes;
 }
