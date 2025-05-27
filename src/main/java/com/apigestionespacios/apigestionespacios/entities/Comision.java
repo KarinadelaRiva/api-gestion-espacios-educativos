@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id", "asignatura", "comision", "profesor"})
 @Builder
-public class Inscripcion {
+public class Comision {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,9 +63,17 @@ public class Inscripcion {
 
     @OneToMany
     (
-            mappedBy = "inscripcion", // Nombre de la propiedad en la clase Reserva que hace referencia a Inscripcion
+            mappedBy = "comision", // Nombre de la propiedad en la clase Reserva que hace referencia a Comision
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a la inscripción si se elimina la inscripción
             fetch = FetchType.EAGER // Cuando se carga la inscripción, se cargan todas las reservas asociadas a la inscripción
     )
     private List<Solicitud> solicitudes;
+
+    @OneToMany
+    (
+            mappedBy = "comision",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<Reserva> reservas;
 }

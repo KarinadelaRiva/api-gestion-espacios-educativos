@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
-    List<Solicitud> findByUsuarioId(Long usuarioId);
+    //List<Solicitud> findByUsuarioId(Long usuarioId);
     List<Solicitud> findByEstado(EstadoSolicitud estado);
-    List<Solicitud> findByTipoSolicitud(TipoSolicitud tipoSolicitud);
+    //List<Solicitud> findByTipoSolicitud(TipoSolicitud tipoSolicitud);
     List<Solicitud> findByFechaHoraSolicitudBetween(LocalDateTime inicio, LocalDateTime fin);
 
     /* Buscar por rango utilizando query
