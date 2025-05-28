@@ -2,6 +2,7 @@ package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.repository.SolicitudRepository;
+import com.apigestionespacios.apigestionespacios.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class SolicitudService {
 
     public Solicitud actualizar(Long id, Solicitud nuevaSolicitud){
         Solicitud existente = solicitudRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Solicitud no encontrado con id: " + id));
+                .orElseThrow(() -> new NotFoundException("Solicitud no encontrado con id: " + id));
 
         Solicitud actualizada = existente.toBuilder()
                 .id(nuevaSolicitud.getId())
