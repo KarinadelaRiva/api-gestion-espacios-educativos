@@ -1,4 +1,4 @@
 package com.apigestionespacios.apigestionespacios.service;
 
-public class InscripcionService {
+public class ComisionService {
 }
