@@ -4,7 +4,6 @@ import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
