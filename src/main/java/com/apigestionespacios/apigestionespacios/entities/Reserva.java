@@ -1,13 +1,12 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "reserva")
@@ -16,7 +15,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id", "espacio", "inscripcion"})
+@EqualsAndHashCode(of = {"id", "espacio", "comision"})
 @Builder
 public class Reserva {
 
@@ -30,8 +29,9 @@ public class Reserva {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    @Enumerated(EnumType.STRING)
     @Column(name= "dia", nullable = false)
-    private DayOfWeek dia;
+    private DiaSemana dia;
 
     @Column
     private LocalTime horaInicio;
@@ -44,7 +44,7 @@ public class Reserva {
     private Espacio espacio;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inscripcion_id", nullable = false)
-    private Inscripcion inscripcion;
+    @JoinColumn(name = "comision_id", nullable = false)
+    private Comision comision;
 
 }

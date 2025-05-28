@@ -3,7 +3,6 @@ package com.apigestionespacios.apigestionespacios.entities;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
-import com.apigestionespacios.apigestionespacios.entities.enums.TipoSolicitud;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -70,8 +69,8 @@ public class Solicitud {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JoinColumn(name = "inscripcion_id", nullable = false)
-    private Inscripcion inscripcion;
+    @JoinColumn(name = "comision_id", nullable = false)
+    private Comision comision;
 
 }
 

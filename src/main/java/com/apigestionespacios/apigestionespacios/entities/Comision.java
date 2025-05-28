@@ -3,7 +3,6 @@ package com.apigestionespacios.apigestionespacios.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -12,9 +11,9 @@ import java.util.List;
 @ToString(exclude = {"profesor", "asignatura"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id", "asignatura", "comision", "profesor"})
+@EqualsAndHashCode(of = {"id", "asignatura", "profesor"})
 @Builder
-public class Inscripcion {
+public class Comision {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,22 +24,11 @@ public class Inscripcion {
     )
     private Integer cantidadAlumnos;
 
-    @Column(
-            nullable = false
-    )
-    private LocalDate fechaFinInscripcion;
-
-    @Column(
-            nullable = false
-    )
-    private String comision;
-
     /**
      * * Relación con la entidad Usuario
      * validar que sea del tipo profesor al dar del alta una inscripción
      */
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
@@ -63,9 +51,22 @@ public class Inscripcion {
 
     @OneToMany
     (
-            mappedBy = "inscripcion", // Nombre de la propiedad en la clase Reserva que hace referencia a Inscripcion
+            mappedBy = "comision", // Nombre de la propiedad en la clase Reserva que hace referencia a Comision
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a la inscripción si se elimina la inscripción
             fetch = FetchType.EAGER // Cuando se carga la inscripción, se cargan todas las reservas asociadas a la inscripción
     )
     private List<Solicitud> solicitudes;
+
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "carrera_id",
+            referencedColumnName = "id",
+            nullable = false
+    )
+    private Carrera carrera;
 }
+
+
