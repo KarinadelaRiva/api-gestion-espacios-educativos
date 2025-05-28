@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id", "espacio", "inscripcion"})
+@EqualsAndHashCode(of = {"id", "espacio", "comision"})
 @Builder
 public class Reserva {
 
