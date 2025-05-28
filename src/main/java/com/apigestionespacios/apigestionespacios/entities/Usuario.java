@@ -39,9 +39,9 @@ public class Usuario {
     private Rol rol;
 
     @OneToMany(
-            mappedBy = "profesor", // Nombre de la propiedad en la clase Inscripcion que hace referencia a Usuario
+            mappedBy = "profesor", // Nombre de la propiedad en la clase Comision que hace referencia a Usuario
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    private List<Inscripcion> inscripciones;
+    private List<Comision> comisiones;
 } 

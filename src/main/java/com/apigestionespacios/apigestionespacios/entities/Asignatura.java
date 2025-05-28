@@ -38,9 +38,9 @@ public class Asignatura {
     private Boolean requiereLaboratorio;
 
     @OneToMany(
-            mappedBy = "asignatura", // Nombre de la propiedad en la clase Inscripcion que hace referencia a Asignatura
-            cascade = CascadeType.ALL, // Permite que se eliminen las inscripciones asociadas a la asignatura
-            fetch = FetchType.EAGER // Cuando se carga la asignatura, se cargan todas las inscripciones asociadas a la asignatura
+            mappedBy = "asignatura", // Nombre de la propiedad en la clase Comision que hace referencia a Asignatura
+            cascade = CascadeType.ALL, // Permite que se eliminen las comisiones asociadas a la asignatura
+            fetch = FetchType.EAGER // Cuando se carga la comision, se cargan todas las comisiones asociadas a la asignatura
     )
-    private List<Inscripcion> inscripciones;
+    private List<Comision> comisiones;
 }
