@@ -3,6 +3,10 @@ package com.apigestionespacios.apigestionespacios.repository;
 import com.apigestionespacios.apigestionespacios.entities.Comision;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ComisionRepository extends JpaRepository<Comision, Long> {
+import java.util.List;
+import java.util.Optional;
 
+public interface ComisionRepository extends JpaRepository<Comision, Long> {
+    Optional<Comision> findtByCantidadAlumnos(Integer cantidad);
+    List<Comision> findByCantidadAlumnosBetween(Integer minimo, Integer maximo);
 }
