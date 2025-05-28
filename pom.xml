@@ -8,10 +8,10 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.apigestionaulas</groupId>
-	<artifactId>api-gestion-espacios-educativos</artifactId>
+	<groupId>com.apigestionespacios</groupId>
+	<artifactId>api-gestion-espacios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>api-gestion-aulas</name>
+	<name>api-gestion-espacios</name>
 	<description>API REST para realizar la Gestion de Aulas desarrollada con SpringBoot</description>
 	<url/>
 	<licenses>
