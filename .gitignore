@@ -9,9 +9,6 @@ HELP.md
 surefire-reports/
 jacoco.exec
 
-### Configuración sensible local de Spring Boot ###
-src/main/resources/application.properties
-
 ### IntelliJ IDEA ###
 .idea
 *.iws
@@ -43,3 +40,4 @@ build/
 
 ### VS Code ###
 .vscode/
+

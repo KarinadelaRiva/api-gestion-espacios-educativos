@@ -16,12 +16,12 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Builder
+@Builder(toBuilder = true)
 public class Solicitud {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     // Usuario que realizó la solicitud (conectado a Profesor)
     @ManyToOne
