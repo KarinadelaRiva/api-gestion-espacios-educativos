@@ -1,5 +1,6 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,8 +29,9 @@ public class Reserva {
     @Column(name = "fecha_fin", nullable = false)
     private LocalDate fechaFin;
 
+    @Enumerated(EnumType.STRING)
     @Column(name= "dia", nullable = false)
-    private DayOfWeek dia;
+    private DiaSemana dia;
 
     @Column
     private LocalTime horaInicio;
