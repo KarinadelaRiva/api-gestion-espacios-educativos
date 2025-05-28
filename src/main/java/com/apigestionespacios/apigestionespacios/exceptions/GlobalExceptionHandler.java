@@ -10,8 +10,8 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends RuntimeException {
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> manejarNotFoundException(NoSuchElementException ex) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<String> manejarNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
