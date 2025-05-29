@@ -71,7 +71,11 @@ public class SolicitudService {
         return solicitudRepository.findByEstadoAndUsuarioId(estado, usuarioId);
     }
 
-    public List<Solicitud> obtenerTodasOrdenadasPorFechaDesc() {
-        return solicitudRepository.findAllByOrderByFechaDesc();
+    public List<Solicitud> obtenerTodasOrdenadasPorFechaHoraSolicitudDesc() {
+        return solicitudRepository.findAllByOrderByFechaHoraSolicitudDesc();
+    }
+
+    public boolean existePorId(Long id) {
+        return solicitudRepository.existsById(id);
     }
 }

@@ -4,6 +4,7 @@ package com.apigestionespacios.apigestionespacios.entities;
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class Solicitud {
     private Long id;
 
     // Usuario que realizó la solicitud (conectado a Profesor)
+
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
