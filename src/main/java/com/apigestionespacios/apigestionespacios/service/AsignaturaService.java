@@ -2,12 +2,16 @@ package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.repository.AsignaturaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AsignaturaService {
     private final AsignaturaRepository asignaturaRepository;
 
+    @Autowired
     public AsignaturaService(AsignaturaRepository asignaturaRepository) {
         this.asignaturaRepository = asignaturaRepository;
     }
