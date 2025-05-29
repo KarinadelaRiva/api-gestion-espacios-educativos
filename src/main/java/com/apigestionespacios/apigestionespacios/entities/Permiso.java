@@ -11,6 +11,6 @@ public class Permiso {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private Permisos nombre; // tu enum
+    private Permisos nombre;
 }
 
