@@ -26,10 +26,14 @@ public class Carrera {
     )
     private String nombre;
 
-    @OneToMany(
-            mappedBy = "carrera",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+    @ManyToMany(
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL
     )
-    private List<Comision> comisiones;
+    @JoinTable(
+            name = "carrera_asignatura",
+            joinColumns = @JoinColumn(name = "carrera_id"),
+            inverseJoinColumns = @JoinColumn(name = "asignatura_id")
+    )
+    private List<Asignatura> asignaturas;
 }

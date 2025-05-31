@@ -37,6 +37,9 @@ public class Asignatura {
     )
     private Boolean requiereLaboratorio;
 
+    @ManyToMany(mappedBy = "asignaturas")
+    private List<Carrera> carreras;
+
     @OneToMany(
             mappedBy = "asignatura", // Nombre de la propiedad en la clase Comision que hace referencia a Asignatura
             cascade = CascadeType.ALL, // Permite que se eliminen las comisiones asociadas a la asignatura

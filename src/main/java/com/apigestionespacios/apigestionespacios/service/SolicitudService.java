@@ -71,6 +71,6 @@ public class SolicitudService {
     }
 
     public List<Solicitud> obtenerTodasOrdenadasPorFechaDesc() {
-        return solicitudRepository.findAllByOrderByFechaDesc();
+        return solicitudRepository.findAllByOrderByFechaInicioDesc();
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @ToString(exclude = {"profesor", "asignatura"})
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"id", "asignatura", "profesor"})
+@EqualsAndHashCode(of = {"id"})
 @Builder
 public class Comision {
 
@@ -58,8 +58,8 @@ public class Comision {
     private List<Solicitud> solicitudes;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.LAZY,
+            optional = false // No se permite que la carrera sea nula, por lo tanto, no es opcional
     )
     @JoinColumn(
             name = "carrera_id",

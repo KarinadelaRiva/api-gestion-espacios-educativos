@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ComisionRepository extends JpaRepository<Comision, Long> {
-    Optional<Comision> findtByCantidadAlumnos(Integer cantidad);
+    Optional<Comision> findByCantidadAlumnos(Integer cantidad);
     List<Comision> findByCantidadAlumnosBetween(Integer minimo, Integer maximo);
 }

@@ -21,28 +21,28 @@ public class ComisionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comision>> listar() {
+    public ResponseEntity<List<Comision>> obtenerTodas() {
         return new ResponseEntity<>(comisionService.obtenerTodas(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Comision> obtener(@PathVariable Long id) {
+    public ResponseEntity<Comision> obtenerPorId(@PathVariable Long id) {
         return new ResponseEntity<>(comisionService.obtenerPorId(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Comision> crear(@RequestBody Comision comision) {
-        return new ResponseEntity<>(comisionService.guardar(comision), HttpStatus.CREATED);
+    public ResponseEntity<Comision> crearComision(@RequestBody Comision comision) {
+        return new ResponseEntity<>(comisionService.crearComision(comision), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comision> actualizar(@PathVariable Long id, @RequestBody Comision comision) {
-        return new ResponseEntity<>(comisionService.actualizar(id, comision), HttpStatus.OK);
+    public ResponseEntity<Comision> actualizarComision(@PathVariable Long id, @RequestBody Comision comision) {
+        return new ResponseEntity<>(comisionService.actualizarComision(id, comision), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        comisionService.eliminar(id);
+    public ResponseEntity<Void> eliminarComision(@PathVariable Long id) {
+        comisionService.eliminarComision(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
