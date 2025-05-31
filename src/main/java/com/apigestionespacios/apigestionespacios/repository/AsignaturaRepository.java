@@ -13,4 +13,5 @@ public interface AsignaturaRepository extends JpaRepository<Asignatura, Long> {
     Optional<Asignatura> findByCodigo(Integer codigo);
     List<Asignatura> findAllByOrderByNombreAsc();
     List<Asignatura> findByRequiereLaboratorioTrue();
+    Boolean existsByCodigo(Integer codigo);
 }
