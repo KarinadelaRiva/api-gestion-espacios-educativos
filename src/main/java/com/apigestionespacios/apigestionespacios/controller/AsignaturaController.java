@@ -20,28 +20,33 @@ public class AsignaturaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Asignatura>> listar() {
+    public ResponseEntity<List<Asignatura>> listarAsignaturas() {
         return new ResponseEntity<>(asignaturaService.obtenerTodas(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Asignatura> obtener(@PathVariable Long id) {
+    public ResponseEntity<Asignatura> obtenerAsignaturaPorId(@PathVariable Long id) {
         return new ResponseEntity<>(asignaturaService.obtenerPorId(id), HttpStatus.OK);
     }
 
+    @GetMapping("/codigo/{codigo}")
+    public ResponseEntity<Asignatura> obtenerAsignaturaPorCodigo(@PathVariable Integer codigo) {
+        return new ResponseEntity<>(asignaturaService.obtenerPorCodigo(codigo), HttpStatus.OK);
+    }
+
     @PostMapping
-    public ResponseEntity<Asignatura> crear(@RequestBody Asignatura asignatura) {
-        return new ResponseEntity<>(asignaturaService.guardar(asignatura), HttpStatus.CREATED);
+    public ResponseEntity<Asignatura> crearAsignatura(@RequestBody Asignatura asignatura) {
+        return new ResponseEntity<>(asignaturaService.crearAsignatura(asignatura), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Asignatura> actualizar(@PathVariable Long id, @RequestBody Asignatura asignatura) {
-        return new ResponseEntity<>(asignaturaService.actualizar(id, asignatura), HttpStatus.OK);
+    public ResponseEntity<Asignatura> actualizarAsignatura(@PathVariable Long id, @RequestBody Asignatura asignatura) {
+        return new ResponseEntity<>(asignaturaService.actualizarAsignatura(id, asignatura), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
-        asignaturaService.eliminar(id);
+    public ResponseEntity<Void> eliminarAsignatura(@PathVariable Long id) {
+        asignaturaService.eliminarAsignatura(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

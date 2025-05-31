@@ -36,17 +36,17 @@ public class CarreraController {
 
     @PostMapping
     public ResponseEntity<Carrera> crear(@RequestBody Carrera carrera) {
-        return new  ResponseEntity<>(carreraService.guardar(carrera), HttpStatus.CREATED);
+        return new  ResponseEntity<>(carreraService.crearCarrera(carrera), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Carrera> actualizar(@PathVariable Long id, @RequestBody Carrera carrera) {
-        return new ResponseEntity<>(carreraService.actualizar(id, carrera), HttpStatus.OK);
+        return new ResponseEntity<>(carreraService.actualizarCarrera(id, carrera), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public  ResponseEntity<Carrera> eliminar(@PathVariable Long id) {
-        carreraService.eliminar(id);
+        carreraService.eliminarCarrera(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -1,6 +1,8 @@
 package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
+import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.CarreraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,30 +24,30 @@ public class CarreraService {
 
     public Carrera obtenerPorId(Long id) {
         return carreraRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Carrera no encontrada con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Carrera no encontrada con ID: " + id));
     }
 
     public Carrera obtenerPorNombre(String nombre) {
         return carreraRepository.findByNombre(nombre)
-                .orElseThrow(() -> new RuntimeException("Carrera no econtrada con nombre: " + nombre));
+                .orElseThrow(() -> new ResourceNotFoundException("Carrera no econtrada con nombre: " + nombre));
     }
 
-    public Carrera guardar(Carrera carrera) {
+    public Carrera crearCarrera(Carrera carrera) {
         if (carreraRepository.existsByNombre(carrera.getNombre())) {
-            throw new RuntimeException("Ya existe una carrera con ese nombre.");
+            throw new EntityValidationException("Ya existe una carrera con ese nombre.");
         }
         return carreraRepository.save(carrera);
     }
 
-    public Carrera actualizar(Long id, Carrera nueva) {
+    public Carrera actualizarCarrera(Long id, Carrera nueva) {
         Carrera existente = obtenerPorId(id);
         existente.setNombre(nueva.getNombre());
         return carreraRepository.save(existente);
     }
 
-    public void eliminar(Long id) {
+    public void eliminarCarrera(Long id) {
         if (!carreraRepository.existsById(id)) {
-            throw new RuntimeException("No, se pudo eliminar. Carrera no encontrada.");
+            throw new ResourceNotFoundException("No, se pudo eliminarCarrera. Carrera no encontrada.");
         }
         carreraRepository.deleteById(id);
     }

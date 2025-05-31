@@ -1,4 +1,4 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-public class SolicitudCambioAulaController {
+public class SolicitudController {
 }

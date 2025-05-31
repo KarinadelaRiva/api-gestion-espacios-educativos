@@ -35,7 +35,7 @@ public class Asignatura {
     @Column(
             nullable = false
     )
-    private Boolean requiereLaboratorio;
+    private Boolean requiereLaboratorio = false;
 
     @ManyToMany(mappedBy = "asignaturas")
     private List<Carrera> carreras;
