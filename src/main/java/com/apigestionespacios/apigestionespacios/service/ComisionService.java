@@ -32,7 +32,7 @@ public class ComisionService {
     }
 
     public Comision guardar(Comision comision) {
-//        validarProfesor(comision.getProfesor().getId());
+        validarProfesor(comision.getProfesor().getId());
 //        validarCarrera(comision.getCarrera().getId());
 //        validarAsignatura(comision.getCarrera().getId(), comision.getAsignatura().getId());
         return comisionRepository.save(comision);
@@ -40,7 +40,7 @@ public class ComisionService {
 
     public Comision actualizar(Long id, Comision nueva) {
         Comision existente = obtenerPorId(id);
-//        validarProfesor(nueva.getProfesor().getId());
+        validarProfesor(nueva.getProfesor().getId());
 //        validarCarrera(nueva.getCarrera().getId());
 //        validarAsignatura(nueva.getCarrera().getId(), nueva.getAsignatura().getId());
 
@@ -60,18 +60,18 @@ public class ComisionService {
         comisionRepository.deleteById(id);
     }
 
-//    private void validarProfesor(Long idUsuarioProfesor) {
-//        Usuario usuario = usuarioService.obtenerPorId(idUsuarioProfesor);
-//        if (usuario == null) {
-//            throw new RuntimeException("El usuario con ID " + idUsuarioProfesor + " no existe");
-//        }
-//
-//        boolean esProfesor = usuario.getRol().getNombre().equalsIgnoreCase("PROFESOR");
-//
-//        if (!esProfesor) {
-//            throw new RuntimeException("El usuario con ID " + idUsuarioProfesor + " no tiene el rol de profesor");
-//        }
-//    }
+    private void validarProfesor(Long idUsuarioProfesor) {
+        Usuario usuario = usuarioService.obtenerPorId(idUsuarioProfesor);
+        if (usuario == null) {
+            throw new RuntimeException("El usuario con ID " + idUsuarioProfesor + " no existe");
+        }
+
+        boolean esProfesor = usuario.getRol().getNombre().equalsIgnoreCase("PROFESOR");
+
+        if (!esProfesor) {
+            throw new RuntimeException("El usuario con ID " + idUsuarioProfesor + " no tiene el rol de profesor");
+        }
+    }
 
 //    private void validarCarrera(Long idCarrera) {
 //        carreraService.obtenerPorId(idCarrera); // Lanza excepción si no existe
