@@ -21,7 +21,7 @@ public class AsignaturaController {
 
     @GetMapping
     public ResponseEntity<List<Asignatura>> listar() {
-        return new ResponseEntity<>(asignaturaService.listarAsignaturas(), HttpStatus.OK);
+        return new ResponseEntity<>(asignaturaService.obtenerTodas(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
