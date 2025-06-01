@@ -1,5 +1,7 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"carreras", "comisiones"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"codigo", "id"})
@@ -33,11 +35,13 @@ public class Asignatura {
     private Integer codigo;
 
     @Column(
-            nullable = false
+            nullable = false,
+            columnDefinition = "BOOLEAN DEFAULT FALSE"
     )
     private Boolean requiereLaboratorio = false;
 
     @ManyToMany(mappedBy = "asignaturas")
+    @JsonBackReference
     private List<Carrera> carreras;
 
     @OneToMany(
@@ -45,5 +49,6 @@ public class Asignatura {
             cascade = CascadeType.ALL, // Permite que se eliminen las comisiones asociadas a la asignatura
             fetch = FetchType.EAGER // Cuando se carga la comision, se cargan todas las comisiones asociadas a la asignatura
     )
+    @JsonIgnore
     private List<Comision> comisiones;
 }

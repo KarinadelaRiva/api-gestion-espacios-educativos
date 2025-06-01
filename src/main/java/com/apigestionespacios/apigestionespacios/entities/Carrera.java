@@ -1,5 +1,7 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +22,6 @@ public class Carrera {
     private Long id;
 
     @Column(
-            name = "nombre_asignatura",
             nullable = false,
             length = 50
     )
@@ -35,5 +36,6 @@ public class Carrera {
             joinColumns = @JoinColumn(name = "carrera_id"),
             inverseJoinColumns = @JoinColumn(name = "asignatura_id")
     )
+    @JsonManagedReference
     private List<Asignatura> asignaturas;
 }

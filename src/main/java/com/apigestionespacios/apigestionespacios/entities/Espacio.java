@@ -1,5 +1,6 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,6 +48,7 @@ public abstract class Espacio {
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a el aula si se elimina el aula
             fetch = FetchType.EAGER // Cuando se carga el aula, se cargan todas las reservas asociadas a el aula
     )
+    @JsonManagedReference
     private List<Reserva> reservas;
 
 }

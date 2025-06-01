@@ -1,5 +1,6 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(exclude = {"profesor", "asignatura"})
+@ToString(exclude = {"profesor", "solicitudes", "carrera"})
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
@@ -29,7 +30,7 @@ public class Comision {
      * validar que sea del tipo profesor al dar del alta una inscripción
      */
     @ManyToOne(
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(
             name = "usuario_profesor_id",
@@ -47,6 +48,7 @@ public class Comision {
             referencedColumnName = "id",
             nullable = false
     )
+    @JsonIgnore
     private Asignatura asignatura;
 
     @OneToMany
@@ -55,6 +57,7 @@ public class Comision {
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a la inscripción si se elimina la inscripción
             fetch = FetchType.EAGER // Cuando se carga la inscripción, se cargan todas las reservas asociadas a la inscripción
     )
+    @JsonIgnore
     private List<Solicitud> solicitudes;
 
     @ManyToOne(
@@ -66,6 +69,7 @@ public class Comision {
             referencedColumnName = "id",
             nullable = false
     )
+    @JsonIgnore
     private Carrera carrera;
 }
 

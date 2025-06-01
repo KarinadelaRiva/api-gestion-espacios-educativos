@@ -1,5 +1,6 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,5 +51,6 @@ public class Usuario {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
+    @JsonIgnore
     private List<Comision> comisiones;
 } 
