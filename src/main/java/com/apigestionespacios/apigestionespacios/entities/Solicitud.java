@@ -3,8 +3,8 @@ package com.apigestionespacios.apigestionespacios.entities;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,19 +23,18 @@ public class Solicitud {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Usuario que realizó la solicitud (conectado a Profesor)
-
+    
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "reserva_original_id")
+    @JoinColumn(name = "reserva_original_id", nullable = true)
     private Reserva reservaOriginal;
 
     @ManyToOne
     @JoinColumn(name = "nuevo_espacio_id", nullable = false)
+    @JsonBackReference
     private Espacio nuevoEspacio;
 
     @Enumerated(EnumType.STRING)
@@ -69,7 +68,7 @@ public class Solicitud {
 
     @ManyToOne(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(name = "comision_id", nullable = false)
     private Comision comision;

@@ -2,7 +2,6 @@ package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.repository.SolicitudRepository;
-import com.apigestionespacios.apigestionespacios.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
