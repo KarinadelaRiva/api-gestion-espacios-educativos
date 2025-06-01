@@ -2,6 +2,7 @@ package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.repository.SolicitudRepository;
+import com.apigestionespacios.apigestionespacios.service.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,11 @@ public class SolicitudService {
         return solicitudRepository.findByEstadoAndUsuarioId(estado, usuarioId);
     }
 
-    public List<Solicitud> obtenerTodasOrdenadasPorFechaDesc() {
-        return solicitudRepository.findAllByOrderByFechaInicioDesc();
+    public List<Solicitud> obtenerTodasOrdenadasPorFechaHoraSolicitudDesc() {
+        return solicitudRepository.findAllByOrderByFechaHoraSolicitudDesc();
+    }
+
+    public boolean existePorId(Long id) {
+        return solicitudRepository.existsById(id);
     }
 }

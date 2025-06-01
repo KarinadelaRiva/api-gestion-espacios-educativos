@@ -2,6 +2,7 @@ package com.apigestionespacios.apigestionespacios.repository;
 
 
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
+import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,5 +17,5 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
 
     List<Solicitud> findByEstadoAndUsuarioId(String estado, Long usuarioId);
 
-    List<Solicitud> findAllByOrderByFechaInicioDesc();
+    List<Solicitud> findAllByOrderByFechaHoraSolicitudDesc();
 }
