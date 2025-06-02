@@ -25,12 +25,12 @@ public class EspacioController {
         return new ResponseEntity<>(espacioService.obtenerTodos(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<Espacio> obtenerPorId(@PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerPorId(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{nombre}")
+    @GetMapping("/nombre/{nombre}")
     public ResponseEntity<Espacio> obtenerPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(espacioService.obtenerPorNombre(nombre), HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class EspacioController {
         return new ResponseEntity<>(espacioService.obtenerReservasPorEspacio(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{capacidad}")
+    @GetMapping("/capacidad/{capacidad}")
     public ResponseEntity<List<Espacio>> obtenerPorCapacidadMinima(@PathVariable Integer capacidad) {
         return new ResponseEntity<>(espacioService.obtenerPorCapacidadMinima(capacidad), HttpStatus.OK);
     }
