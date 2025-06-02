@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
+import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.service.EspacioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,11 @@ public class EspacioController {
     @GetMapping("/{nombre}")
     public ResponseEntity<Espacio> obtenerPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(espacioService.obtenerPorNombre(nombre), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/reservas")
+    public ResponseEntity<List<Reserva>> obtenerReservasPorEspacio(@PathVariable Long id) {
+        return new ResponseEntity<>(espacioService.obtenerReservasPorEspacio(id), HttpStatus.OK);
     }
 
     @GetMapping("/{capacidad}")

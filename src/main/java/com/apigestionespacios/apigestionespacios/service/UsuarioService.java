@@ -1,6 +1,8 @@
 package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.UsuarioRepository;
 import com.apigestionespacios.apigestionespacios.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,17 @@ public class UsuarioService {
 
     public Usuario obtenerPorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con ID: " + id));
     }
 
     public Usuario obtenerPorUsername(String username) {
         return usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con username: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con username: " + username));
     }
 
     public Usuario guardar(Usuario usuario) {
         if (usuarioRepository.existsByUsername(usuario.getUsername())) {
-            throw new RuntimeException("Ya existe un usuario con el mismo username");
+            throw new ResourceConflictException("Ya existe un usuario con el mismo username");
         }
 
 //        if (!rolRepository.existsById(usuario.getRol().getId())) {
@@ -51,7 +53,7 @@ public class UsuarioService {
 
         if (!existente.getUsername().equals(actualizado.getUsername()) &&
                 usuarioRepository.existsByUsername(actualizado.getUsername())) {
-            throw new RuntimeException("El username ya está en uso por otro usuario");
+            throw new ResourceConflictException("El username ya está en uso por otro usuario");
         }
 
         existente.setNombre(actualizado.getNombre());
@@ -70,7 +72,7 @@ public class UsuarioService {
 
     public void eliminar(Long id) {
         if (!usuarioRepository.existsById(id)) {
-            throw new RuntimeException("Usuario no encontrado");
+            throw new ResourceNotFoundException("Usuario no encontrado");
         }
         usuarioRepository.deleteById(id);
     }

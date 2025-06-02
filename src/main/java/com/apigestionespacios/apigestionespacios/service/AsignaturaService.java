@@ -2,6 +2,7 @@ package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.AsignaturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class AsignaturaService {
 
     public Asignatura crearAsignatura(Asignatura asignatura) {
         if (asignaturaRepository.existsByCodigo(asignatura.getCodigo())) {
-            throw new EntityValidationException("Ya existe una asignatura con ese código");
+            throw new ResourceConflictException("Ya existe una asignatura con ese código");
         }
         return asignaturaRepository.save(asignatura);
     }
@@ -43,7 +44,7 @@ public class AsignaturaService {
         Asignatura existente = obtenerPorId(id);
         if (!existente.getCodigo().equals(nueva.getCodigo()) &&
                 asignaturaRepository.existsByCodigo(nueva.getCodigo())) {
-            throw new EntityValidationException("Ya existe una asignatura con ese código");
+            throw new ResourceConflictException("Ya existe una asignatura con ese código");
         }
         existente.setNombre(nueva.getNombre());
         existente.setRequiereLaboratorio(nueva.getRequiereLaboratorio());

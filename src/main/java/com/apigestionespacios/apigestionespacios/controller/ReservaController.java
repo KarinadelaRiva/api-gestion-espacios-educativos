@@ -18,7 +18,12 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @GetMapping
-    public ResponseEntity<List<Reserva>> listarReservas() {
+    public ResponseEntity<List<Reserva>> listarReservas(
+            @RequestParam (required = false) Long usuarioId)
+    {
+        if(usuarioId != null) {
+            return new ResponseEntity<>(reservaService.listarReservasPorUsuario(usuarioId), HttpStatus.OK);
+        }
         return new ResponseEntity<>(reservaService.listarReservas(), HttpStatus.OK);
     }
 
@@ -26,6 +31,8 @@ public class ReservaController {
     public ResponseEntity<Reserva> obtenerReserva(@PathVariable Long id) {
         return new ResponseEntity<>(reservaService.obtenerReserva(id), HttpStatus.OK);
     }
+
+    @GetMapping("/")
 
     @PostMapping
     public ResponseEntity<Reserva> crearReserva(@RequestBody Reserva reserva) {

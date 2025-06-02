@@ -19,6 +19,10 @@ public class ReservaService {
         return reservaRepository.findAll();
     }
 
+    public List<Reserva> listarReservasPorUsuario(Long usuarioId) {
+        return reservaRepository.findByUsuarioId(usuarioId);
+    }
+
     public Reserva obtenerReserva(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva con ID " + id + " no encontrada."));
@@ -29,7 +33,7 @@ public class ReservaService {
     }
 
     public Reserva actualizarReserva(Reserva reserva) {
-        if (reservaRepository.existsById(Long.valueOf(reserva.getId()))) {
+        if (reservaRepository.existsById(reserva.getId())) {
             return reservaRepository.save(reserva);
         } else {
             throw new ResourceNotFoundException("Reserva con ID " + reserva.getId() + " no encontrada.");
@@ -57,4 +61,10 @@ public class ReservaService {
 
         reservaRepository.save(reserva);
     }
+
+    public List<Reserva> listarReservasPorEspacio(Long espacioId) {
+        return reservaRepository.findByEspacioId(espacioId);
+    }
+
+
 }

@@ -1,6 +1,9 @@
 package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
+import com.apigestionespacios.apigestionespacios.entities.Reserva;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
+import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.EspacioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,16 @@ public class EspacioService {
 
     public Espacio obtenerPorId(Long id) {
         return espacioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Espacio no encontrado con ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Espacio no encontrado con ID: " + id));
     }
 
     public Espacio obtenerPorNombre(String nombre) {
         return espacioRepository.findByNombre(nombre)
-                .orElseThrow(() -> new RuntimeException("Espacio no encontrado con nombre: " + nombre));
+                .orElseThrow(() -> new ResourceNotFoundException("Espacio no encontrado con nombre: " + nombre));
+    }
+
+    public List<Reserva> obtenerReservasPorEspacio(Long espacioId) {
+        return obtenerPorId(espacioId).getReservas();
     }
 
     public List<Espacio> obtenerPorCapacidadMinima(Integer capacidad) {
@@ -44,7 +51,7 @@ public class EspacioService {
 
     public Espacio guardar(Espacio espacio) {
         if (espacioRepository.existsByNombre(espacio.getNombre())) {
-            throw new RuntimeException("Ya existe un espacio con ese nombre");
+            throw new ResourceConflictException("Ya existe un espacio con ese nombre");
         }
         return espacioRepository.save(espacio);
     }
@@ -60,7 +67,7 @@ public class EspacioService {
 
     public void eliminar(Long id) {
         if(!espacioRepository.existsById(id)){
-            throw new RuntimeException("Espacio no encontrado");
+            throw new ResourceNotFoundException("Espacio no encontrado");
         }
         espacioRepository.deleteById(id);
     }
