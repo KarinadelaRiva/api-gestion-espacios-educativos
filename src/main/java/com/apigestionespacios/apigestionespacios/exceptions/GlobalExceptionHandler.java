@@ -34,6 +34,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
 
+    @ExceptionHandler(ReservaSolapadaException.class)
+    public ResponseEntity<String> manejarReservaSolapada(ReservaSolapadaException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
 
 
 
