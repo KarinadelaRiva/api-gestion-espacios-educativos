@@ -96,4 +96,13 @@ public class ComisionService {
             throw new EntityValidationException("La cantidad de alumnos no puede exceder los 200.");
         }
     }
+
+    public List<Comision> obtenerComisionesPorAsignatura(Long asignaturaId) {
+        return comisionRepository.findByAsignaturaId(asignaturaId);
+    }
+
+    public List<Comision> obtenerComisionesPorProfesor(Long profesorId) {
+        return comisionRepository.findByProfesorId(profesorId);
+    }
+
 }

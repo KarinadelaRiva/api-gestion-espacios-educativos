@@ -45,4 +45,27 @@ public class ComisionController {
         comisionService.eliminarComision(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/por-asignatura/{asignaturaId}")
+    public ResponseEntity<List<Comision>> obtenerComisionesPorAsignatura(@PathVariable Long asignaturaId) {
+        List<Comision> comisiones = comisionService.obtenerComisionesPorAsignatura(asignaturaId);
+
+        if (comisiones.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(comisiones);
+    }
+
+    @GetMapping("/por-profesor/{profesorId}")
+    public ResponseEntity<List<Comision>> obtenerComisionesPorProfesor(@PathVariable Long profesorId) {
+        List<Comision> comisiones = comisionService.obtenerComisionesPorProfesor(profesorId);
+
+        if (comisiones.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(comisiones);
+    }
+
 }
