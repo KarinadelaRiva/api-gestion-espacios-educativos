@@ -39,7 +39,7 @@ public class Solicitud {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoSolicitud estado;
+    private EstadoSolicitud estado = EstadoSolicitud.PENDIENTE;
 
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
