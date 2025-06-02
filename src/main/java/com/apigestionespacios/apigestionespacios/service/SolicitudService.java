@@ -136,7 +136,7 @@ public class SolicitudService {
             throw new EntityValidationException("No tiene permiso para cancelar esta solicitud.");
         }
 
-        if (!"PENDIENTE".equalsIgnoreCase(solicitud.getEstado())) {
+        if (!"PENDIENTE".equalsIgnoreCase(solicitud.getEstado().toString())) {
             throw new EntityValidationException("Solo se pueden cancelar solicitudes en estado PENDIENTE.");
         }
 
