@@ -18,12 +18,8 @@ public class ReservaController {
     private ReservaService reservaService;
 
     @GetMapping
-    public ResponseEntity<List<Reserva>> listarReservas(
-            @RequestParam (required = false) Long usuarioId)
+    public ResponseEntity<List<Reserva>> listarReservas()
     {
-        if(usuarioId != null) {
-            return new ResponseEntity<>(reservaService.listarReservasPorUsuario(usuarioId), HttpStatus.OK);
-        }
         return new ResponseEntity<>(reservaService.listarReservas(), HttpStatus.OK);
     }
 

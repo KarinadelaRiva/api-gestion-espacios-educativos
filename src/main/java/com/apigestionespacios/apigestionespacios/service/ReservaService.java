@@ -19,10 +19,6 @@ public class ReservaService {
         return reservaRepository.findAll();
     }
 
-    public List<Reserva> listarReservasPorUsuario(Long usuarioId) {
-        return reservaRepository.findByUsuarioId(usuarioId);
-    }
-
     public Reserva obtenerReserva(Long id) {
         return reservaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reserva con ID " + id + " no encontrada."));

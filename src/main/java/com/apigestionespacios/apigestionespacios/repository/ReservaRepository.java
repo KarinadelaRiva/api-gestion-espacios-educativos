@@ -8,7 +8,6 @@ import java.util.List;
 
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
-    List<Reserva> findByUsuarioId(Long usuarioId);
     List<Reserva> findByComisionId(Long inscripcionId);
     List<Reserva> findByEspacioId(Long espacioId);
 }
