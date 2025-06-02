@@ -76,4 +76,20 @@ public class CarreraController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /* @PutMapping("/{carreraId}/asignaturas/{asignaturaId}")
+    public ResponseEntity<Carrera> asignarAsignatura(@PathVariable Long carreraId, @PathVariable Long asignaturaId) {
+        return new ResponseEntity<>(carreraService.asignarAsignatura(carreraId, asignaturaId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{carreraId}/asignaturas/{asignaturaId}")
+    public ResponseEntity<Carrera> quitarAsignatura(@PathVariable Long carreraId, @PathVariable Long asignaturaId) {
+        return new ResponseEntity<>(carreraService.quitarAsignatura(carreraId, asignaturaId), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/asignaturas")
+    public ResponseEntity<List<Asignatura>> obtenerAsignaturas(@PathVariable Long id) {
+        return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(id), HttpStatus.OK);
+    } */
+
+
 }

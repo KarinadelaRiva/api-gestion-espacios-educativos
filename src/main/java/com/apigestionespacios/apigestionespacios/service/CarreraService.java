@@ -28,12 +28,12 @@ public class CarreraService {
 
     public Carrera obtenerPorId(Long id) {
         return carreraRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrera no encontrada con ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Carrera no encontrada con ID: " + id));
     }
 
     public Carrera obtenerPorNombre(String nombre) {
         return carreraRepository.findByNombre(nombre)
-                .orElseThrow(() -> new ResourceNotFoundException("Carrera no econtrada con nombre: " + nombre));
+                .orElseThrow(() -> new RuntimeException("Carrera no econtrada con nombre: " + nombre));
     }
 
     public List<Asignatura> obtenerAsignaturasDeCarrera(Long carreraId) {
@@ -102,5 +102,32 @@ public class CarreraService {
         carrera.setAsignaturas(asignaturasCarrera);
         carreraRepository.save(carrera);
     }
+
+    /* public Carrera asignarAsignatura(Long carreraId, Long asignaturaId) {
+        Carrera carrera = obtenerPorId(carreraId);
+        Asignatura asignatura = asignaturaRepository.findById(asignaturaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Asignatura no encontrada con ID: " + asignaturaId));
+
+        if (!carrera.getAsignaturas().contains(asignatura)) {
+            carrera.getAsignaturas().add(asignatura);
+            return carreraRepository.save(carrera);
+        }
+
+        return carrera;
+    }
+
+    public Carrera eliminarAsignatura(Long carreraId, Long asignaturaId) {
+        Carrera carrera = obtenerPorId(carreraId);
+        Asignatura asignatura = asignaturaRepository.findById(asignaturaId)
+                .orElseThrow(() -> new ResourceNotFoundException("Asignatura no encontrada con ID: " + asignaturaId));
+
+        carrera.getAsignaturas().remove(asignatura);
+        return carreraRepository.save(carrera);
+    }
+
+    public List<Asignatura> obtenerAsignaturasDeCarrera(Long carreraId) {
+        Carrera carrera = obtenerPorId(carreraId);
+        return carrera.getAsignaturas();
+    }*/
 
 }
