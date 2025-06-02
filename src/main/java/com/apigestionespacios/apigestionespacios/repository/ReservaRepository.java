@@ -3,6 +3,7 @@ package com.apigestionespacios.apigestionespacios.repository;
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,14 +18,39 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findByEspacioId(Long espacioId);
     Page<Reserva> findAll(Pageable pageable);
 
+    List<Reserva> findByFechaInicio(LocalDate fecha, Sort sort);
+
     List<Reserva> findByEspacioIdAndDia(Long espacioId, String dia);
-    ;
-    List<Reserva> findByFechaInicioOrderByEspacioIdAscHoraInicioAsc(LocalDate fechaInicio);
 
+    /**
+     * Busca reservas por fecha.
+     *
+     * @param fechaConsulta Fecha a consultar.
+     * @return Lista de reservas que coinciden con la fecha
+     */
+    @Query("""
+    SELECT r FROM Reserva r
+    WHERE :fechaConsulta BETWEEN r.fechaInicio AND r.fechaFin
+    ORDER BY r.espacio.id ASC, r.horaInicio ASC
+    """)
+    List<Reserva> findReservasPorFecha(
+            @Param("fechaConsulta") LocalDate fechaConsulta);
 
+    /**
+     * Busca reservas por el ID del profesor asociado a la comisión.
+     *
+     * @param usuarioId ID del profesor.
+     * @return Lista de reservas asociadas al profesor.
+     */
     @Query("SELECT r FROM Reserva r WHERE r.comision.profesor.id = :usuarioId")
     List<Reserva> findReservasByProfesorId(@Param("usuarioId") Long usuarioId);
 
+    /**
+     * Busca reservas actuales (no finalizadas) por el ID del profesor asociado a la comisión.
+     *
+     * @param usuarioId ID del profesor.
+     * @return Lista de reservas actuales asociadas al profesor.
+     */
     @Query("""
     SELECT r FROM Reserva r
     WHERE r.comision.profesor.id = :usuarioId
