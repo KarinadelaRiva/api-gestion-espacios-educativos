@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.service;
 
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
+import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,19 @@ public class ReservaService {
         } else {
             throw new ResourceNotFoundException("Reserva con ID " + id + " no encontrada.");
         }
+    }
+
+    public void generarDesdeSolicitud(Solicitud solicitud) {
+        Reserva reserva = new Reserva();
+
+        reserva.setFechaInicio(solicitud.getFechaInicio());
+        reserva.setFechaFin(solicitud.getFechaFin());
+        reserva.setDia(solicitud.getDiaSemana());
+        reserva.setHoraInicio(solicitud.getHoraInicio());
+        reserva.setHoraFin(solicitud.getHoraFin());
+        reserva.setEspacio(solicitud.getNuevoEspacio());
+        reserva.setComision(solicitud.getComision());
+
+        reservaRepository.save(reserva);
     }
 }
