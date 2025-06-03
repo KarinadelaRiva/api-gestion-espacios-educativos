@@ -13,8 +13,6 @@ import java.util.List;
 @EqualsAndHashCode
 @Builder
 public class CronogramaEspaciosDTO {
-    private Long espacioId;
-    private String nombre;
-    private List<Reserva> reservas;
-
+    private String nombreEspacio;
+    private List<ReservaResponseDTO> reservas;
 }

@@ -99,10 +99,10 @@ public class ComisionController {
     }
 
     /**
-     * Obtiene las comisiones asociadas a una carrera específica.
+     * Obtiene las comisiones asociadas a un profesor específico.
      *
-     * @param carreraId ID de la carrera
-     * @return Lista de comisiones asociadas a la carrera
+     * @param profesorId ID del profesor
+     * @return Lista de comisiones asociadas al profesor
      */
     @GetMapping("/por-profesor/{profesorId}")
     public ResponseEntity<List<Comision>> obtenerComisionesPorProfesor(@PathVariable Long profesorId) {
