@@ -4,7 +4,6 @@ import com.apigestionespacios.apigestionespacios.dtos.CronogramaEspaciosDTO;
 import com.apigestionespacios.apigestionespacios.dtos.ReservaCreateDTO;
 import com.apigestionespacios.apigestionespacios.dtos.ReservaResponseDTO;
 import com.apigestionespacios.apigestionespacios.dtos.ReservaUpdateDTO;
-import com.apigestionespacios.apigestionespacios.entities.Espacio;
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.service.ReservaService;
 import jakarta.validation.Valid;
@@ -204,6 +203,5 @@ public class ReservaController {
         List<CronogramaEspaciosDTO> cronograma = reservaService.obtenerCronogramaDTOParaFecha(fecha);
         return cronograma.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(cronograma);
     }
-    
 
 }

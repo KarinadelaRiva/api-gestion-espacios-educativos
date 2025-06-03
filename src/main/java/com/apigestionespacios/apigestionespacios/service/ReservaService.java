@@ -297,8 +297,8 @@ public class ReservaService {
 
     /**
      * Obtener resevaResponseDTO por ID.
-     * @param id
-     * @return
+     * @param id ID de la reserva.
+     * @return ReservaResponseDTO correspondiente a la reserva encontrada.
      */
     public ReservaResponseDTO obtenerReservaDTO(Long id) {
         Reserva reserva = obtenerReserva(id);
@@ -318,18 +318,8 @@ public class ReservaService {
     }
 
     /**
-     * Listar reservas por espacio.
-     *
-     * @param espacioId ID del espacio.
-     * @return Lista de reservas asociadas al espacio.
-     */
-    public List<ReservaResponseDTO> listarReservasPorEspacio(Long espacioId) {
-        return listaReservasAReservasResponseDTO(reservaRepository.findByEspacioId(espacioId));
-    }
-
-    /**
         * Obtener reservas por Profesor asignado a la comision.
-        * @param usuarioId
+        * @param usuarioId ID del usuario (profesor) cuyas reservas se desean consultar.
         * @return Lista de reservas asociadas al profesor.
         */
     public List<ReservaResponseDTO> obtenerReservasPorProfesor(Long usuarioId) {
@@ -338,7 +328,7 @@ public class ReservaService {
 
     /**
      * Obtener reservas vigentes por Profesor asignado a la comision.
-     * @param usuarioId
+     * @param usuarioId ID del usuario (profesor) cuyas reservas vigentes se desean consultar.
      * @return Lista de reservas vigentes asociadas al profesor.
      */
     public List<ReservaResponseDTO> obtenerReservasVigentesPorProfesor(Long usuarioId) {
