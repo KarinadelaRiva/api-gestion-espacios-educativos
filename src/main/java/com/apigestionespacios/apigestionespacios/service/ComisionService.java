@@ -1,5 +1,9 @@
 package com.apigestionespacios.apigestionespacios.service;
 
+import com.apigestionespacios.apigestionespacios.dtos.ComisionCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.ComisionResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.ComisionUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CronogramaComisionDTO;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.entities.Comision;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
@@ -7,6 +11,7 @@ import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationExce
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.ComisionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,21 +22,62 @@ public class ComisionService {
     private final ComisionRepository comisionRepository;
     private final UsuarioService usuarioService;
     private final CarreraService carreraService;
+    private final AsignaturaService asignaturaService;
+    private final ReservaService reservaService;
 
     @Autowired
-    public ComisionService(ComisionRepository comisionRepository, UsuarioService usuarioService, CarreraService carreraService) {
+    public ComisionService(ComisionRepository comisionRepository, UsuarioService usuarioService,
+                           CarreraService carreraService, AsignaturaService asignaturaService,
+                           @Lazy ReservaService reservaService) {
         this.comisionRepository = comisionRepository;
         this.usuarioService = usuarioService;
         this.carreraService = carreraService;
+        this.asignaturaService = asignaturaService;
+        this.reservaService = reservaService;
+    }
+
+    public Comision comisionCreateDTOtoComision(ComisionCreateDTO dto) {
+        return Comision.builder()
+                .nombre(dto.getNombre())
+                .cantidadAlumnos(dto.getCantidadAlumnos())
+                .asignatura(asignaturaService.obtenerPorId(dto.getAsignaturaId()))
+                .carrera(carreraService.obtenerPorId(dto.getCarreraId()))
+                .profesor(usuarioService.obtenerPorId(dto.getProfesorId()))
+                .build();
+    }
+
+    public ComisionResponseDTO comisionToComisionResponseDTO(Comision comision) {
+        return ComisionResponseDTO.builder()
+                .id(comision.getId())
+                .nombre(comision.getNombre())
+                .asignaturaNombre(comision.getAsignatura().getNombre())
+                .carreraNombre(comision.getCarrera().getNombre())
+                .profesorNombre(comision.getProfesor().getNombre())
+                .cantidadAlumnos(comision.getCantidadAlumnos())
+                .build();
+    }
+
+    public CronogramaComisionDTO comisionToCronogramaComisionDTO(Comision comision) {
+        return CronogramaComisionDTO.builder()
+                .id(comision.getId())
+                .nombre(comision.getNombre())
+                .asignaturaNombre(comision.getAsignatura().getNombre())
+                .carreraNombre(comision.getCarrera().getNombre())
+                .profesorNombre(comision.getProfesor().getNombre())
+                .cantidadAlumnos(comision.getCantidadAlumnos())
+                .reservasVigentes(reservaService.obtenerReservasVigentesPorComision(comision.getId()))
+                .build();
     }
 
     /**
-     * Obtiene todas las comisiones.
+     * Obtiene todas las comisiones en formato DTO.
      *
-     * @return Lista de todas las comisiones
+     * @return Lista de DTOs de comisiones
      */
-    public List<Comision> obtenerTodas() {
-        return comisionRepository.findAll();
+    public List<ComisionResponseDTO> obtenerTodasComisionesDTO() {
+        return comisionRepository.findAll().stream()
+                .map(this::comisionToComisionResponseDTO)
+                .toList();
     }
 
     /**
@@ -41,47 +87,58 @@ public class ComisionService {
      * @param id ID de la comisión a buscar
      * @return Comisión encontrada
      */
-    public Comision obtenerPorId(Long id) {
+    public Comision obtenerComisionPorId(Long id) {
         return comisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Comisión no encontrada con ID: " + id));
     }
 
     /**
-     * Crea una nueva comisión.
+     * Obtiene una comisión por su ID y la convierte a DTO.
+     * Si la comisión no existe, lanza una ResourceNotFoundException.
+     *
+     * @param id ID de la comisión a buscar
+     * @return DTO de la comisión encontrada
+     */
+    public CronogramaComisionDTO obtenerComisionDTOPorId(Long id) {
+        Comision comision = obtenerComisionPorId(id);
+        return comisionToCronogramaComisionDTO(comision);
+    }
+
+    /**
+     * Crea una nueva comisión a partir de un DTO.
      * Valida que el profesor, carrera y asignatura sean correctos.
      * Valida que la cantidad de alumnos sea mayor a cero y no exceda 200.
      *
-     * @param comision Comisión a crear
+     * @param dto DTO con los datos de la comisión a crear
      * @return Comisión creada
      */
-    public Comision crearComision(Comision comision) {
+    public Comision crearComisionDesdeDTO(ComisionCreateDTO dto) {
+        Comision comision = comisionCreateDTOtoComision(dto);
         validarProfesor(comision.getProfesor().getId());
         validarCarrera(comision.getCarrera().getId());
         validarAsignatura(comision.getCarrera().getId(), comision.getAsignatura().getId());
-        validarCantidadAlumnos(comision.getCantidadAlumnos());
+        validarNombreComision(comision);
         return comisionRepository.save(comision);
     }
 
     /**
-     * Actualiza una comisión existente.
-     * Valida que el profesor, carrera y asignatura sean correctos.
-     * Valida que la cantidad de alumnos sea mayor a cero y no exceda 200.
+     *  Actualiza una comisión existente a partir de un DTO.
+     * Valida que el nombre, profesor y carrera sean correctos.
      *
      * @param id ID de la comisión a actualizar
-     * @param nueva Nueva comisión con los datos actualizados
+     * @param dto DTO con los nuevos datos de la comisión
      * @return Comisión actualizada
      */
-    public Comision actualizarComision(Long id, Comision nueva) {
-        Comision existente = obtenerPorId(id);
-        validarProfesor(nueva.getProfesor().getId());
-        validarCarrera(nueva.getCarrera().getId());
-        validarAsignatura(nueva.getCarrera().getId(), nueva.getAsignatura().getId());
-        validarCantidadAlumnos(nueva.getCantidadAlumnos());
+    public Comision actualizarComision(Long id, ComisionUpdateDTO dto) {
+        Comision existente = obtenerComisionPorId(id);
+        existente.setCantidadAlumnos(dto.getCantidadAlumnos());
+        existente.setNombre(dto.getNombre());
+        existente.setProfesor(usuarioService.obtenerPorId(dto.getProfesorId()));
+        existente.setCarrera(carreraService.obtenerPorId(dto.getCarreraId()));
 
-        existente.setCantidadAlumnos(nueva.getCantidadAlumnos());
-        existente.setAsignatura(nueva.getAsignatura());
-        existente.setProfesor(nueva.getProfesor());
-        existente.setCarrera(nueva.getCarrera());
+        validarProfesor(dto.getProfesorId());
+        validarCarrera(dto.getCarreraId());
+        validarNombreComision(existente);
 
         return comisionRepository.save(existente);
     }
@@ -99,7 +156,6 @@ public class ComisionService {
         comisionRepository.deleteById(id);
     }
 
-
     /**
      * Valida que el usuario tenga el rol de profesor.
      * Si no es así, lanza una EntityValidationException.
@@ -111,6 +167,19 @@ public class ComisionService {
 
         if (!"PROFESOR".equalsIgnoreCase(usuario.getRol().getNombre())) {
             throw new EntityValidationException("El usuario con ID " + idUsuarioProfesor + " no tiene el rol de profesor");
+        }
+    }
+
+    /**
+     * Valida que no exista otra comisión con el mismo nombre para la misma asignatura.
+     * Si existe, lanza una IllegalArgumentException.
+     *
+     * @param comision Comisión a validar
+     */
+    private void validarNombreComision(Comision comision){
+        if (comisionRepository.existsByNombreAndAsignaturaId(
+                comision.getNombre(), comision.getAsignatura().getId())) {
+            throw new IllegalArgumentException("Ya existe una comisión con ese nombre para la asignatura indicada.");
         }
     }
 
@@ -142,29 +211,15 @@ public class ComisionService {
     }
 
     /**
-     * Valida que la cantidad de alumnos sea mayor a cero y no exceda 200.
-     * Si no cumple con estas condiciones, lanza una EntityValidationException.
-     *
-     * @param cantidad Cantidad de alumnos a validar
-     */
-    private void validarCantidadAlumnos(Integer cantidad) {
-        if (cantidad == null || cantidad < 1) {
-            throw new EntityValidationException("La cantidad de alumnos debe ser mayor a cero.");
-        }
-
-        if (cantidad > 200) {
-            throw new EntityValidationException("La cantidad de alumnos no puede exceder los 200.");
-        }
-    }
-
-    /**
      * Obtiene todas las comisiones asociadas a una asignatura específica.
      *
      * @param asignaturaId ID de la asignatura
      * @return Lista de comisiones asociadas a la asignatura
      */
-    public List<Comision> obtenerComisionesPorAsignatura(Long asignaturaId) {
-        return comisionRepository.findByAsignaturaId(asignaturaId);
+    public List<ComisionResponseDTO> obtenerComisionesPorAsignatura(Long asignaturaId) {
+        return comisionRepository.findByAsignaturaId(asignaturaId).stream()
+                .map(this::comisionToComisionResponseDTO)
+                .toList();
     }
 
     /**
@@ -173,8 +228,12 @@ public class ComisionService {
      * @param profesorId ID del profesor
      * @return Lista de comisiones asociadas al profesor
      */
-    public List<Comision> obtenerComisionesPorProfesor(Long profesorId) {
-        return comisionRepository.findByProfesorId(profesorId);
+    public List<ComisionResponseDTO> obtenerComisionesPorProfesor(Long profesorId) {
+        return comisionRepository.findByProfesorId(profesorId).stream()
+                .map(this::comisionToComisionResponseDTO)
+                .toList();
     }
+
+
 
 }

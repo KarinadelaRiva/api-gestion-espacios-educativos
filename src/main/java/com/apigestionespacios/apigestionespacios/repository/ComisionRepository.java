@@ -11,6 +11,7 @@ public interface ComisionRepository extends JpaRepository<Comision, Long> {
     List<Comision> findByCantidadAlumnosBetween(Integer minimo, Integer maximo);
     List<Comision> findByAsignaturaId(Long asignaturaId);
     List<Comision> findByProfesorId(Long profesorId);
+    boolean existsByNombreAndAsignaturaId(String nombre, Long asignaturaId);
 
 
 }

@@ -47,7 +47,7 @@ public class ReservaService {
      */
     public Reserva ReservaCreateDTOtoReserva(ReservaCreateDTO dto) {
         Espacio espacio = espacioService.obtenerPorId(dto.getEspacioId());
-        Comision comision = comisionService.obtenerPorId(dto.getComisionId());
+        Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
         DiaSemana dia = DiaSemana.desdeDayOfWeek(dto.getFechaInicio().getDayOfWeek());
 
         return Reserva.builder()
@@ -112,7 +112,7 @@ public class ReservaService {
      */
     public Reserva crearReservaDesdeDTO(ReservaCreateDTO dto) {
         Espacio espacio = espacioService.obtenerPorId(dto.getEspacioId());
-        Comision comision = comisionService.obtenerPorId(dto.getComisionId());
+        Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
 
         if(espacio.getCapacidad() < comision.getCantidadAlumnos()) {
             throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio.");
@@ -338,4 +338,12 @@ public class ReservaService {
         return listaReservasAReservasResponseDTO(reservaRepository.findReservasActualesByProfesorId(usuarioId));
     }
 
+    /**
+     * Obtener reservas vigentes por Comision.
+     * @param comisionId ID de la comisión cuyas reservas vigentes se desean consultar.
+     * @return Lista de reservas vigentes asociadas a la comisión.
+     */
+    public List<ReservaResponseDTO> obtenerReservasVigentesPorComision(Long comisionId) {
+        return listaReservasAReservasResponseDTO(reservaRepository.findReservasActivasPorComisionOrdenadas(comisionId));
+    }
 }

@@ -1,7 +1,12 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
+import com.apigestionespacios.apigestionespacios.dtos.ComisionCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.ComisionResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.ComisionUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CronogramaComisionDTO;
 import com.apigestionespacios.apigestionespacios.entities.Comision;
 import com.apigestionespacios.apigestionespacios.service.ComisionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +31,8 @@ public class ComisionController {
      * @return Lista de todas las comisiones
      */
     @GetMapping
-    public ResponseEntity<List<Comision>> obtenerTodas() {
-        return new ResponseEntity<>(comisionService.obtenerTodas(), HttpStatus.OK);
+    public ResponseEntity<List<ComisionResponseDTO>> obtenerTodas() {
+        return new ResponseEntity<>(comisionService.obtenerTodasComisionesDTO(), HttpStatus.OK);
     }
 
     /**
@@ -38,34 +43,33 @@ public class ComisionController {
      * @return Comisión encontrada
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Comision> obtenerPorId(@PathVariable Long id) {
-        return new ResponseEntity<>(comisionService.obtenerPorId(id), HttpStatus.OK);
+    public ResponseEntity<CronogramaComisionDTO> obtenerPorId(@PathVariable Long id) {
+        return new ResponseEntity<>(comisionService.obtenerComisionDTOPorId(id), HttpStatus.OK);
     }
 
     /**
      * Crea una nueva comisión.
-     * Valida que el profesor, carrera y asignatura sean correctos.
-     * Valida que la cantidad de alumnos sea mayor a cero y no exceda 200.
+     * Valida que el DTO de creación sea válido.
      *
-     * @param comision Comisión a crear
+     * @param comisionCreateDTO DTO de creación de comisión
      * @return Comisión creada
      */
     @PostMapping
-    public ResponseEntity<Comision> crearComision(@RequestBody Comision comision) {
-        return new ResponseEntity<>(comisionService.crearComision(comision), HttpStatus.CREATED);
+    public ResponseEntity<Comision> crearComision(@Valid @RequestBody ComisionCreateDTO comisionCreateDTO) {
+        return new ResponseEntity<>(comisionService.crearComisionDesdeDTO(comisionCreateDTO), HttpStatus.CREATED);
     }
 
     /**
      * Actualiza una comisión existente.
-     * Valida que el ID de la comisión exista.
+     * Valida que el ID de la comisión y el DTO de actualización sean válidos.
      *
      * @param id ID de la comisión a actualizar
-     * @param comision Datos actualizados de la comisión
+     * @param comisionUpdateDTO DTO de actualización de comisión
      * @return Comisión actualizada
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Comision> actualizarComision(@PathVariable Long id, @RequestBody Comision comision) {
-        return new ResponseEntity<>(comisionService.actualizarComision(id, comision), HttpStatus.OK);
+    public ResponseEntity<Comision> actualizarComision(@PathVariable Long id, @Valid @RequestBody ComisionUpdateDTO comisionUpdateDTO) {
+        return new ResponseEntity<>(comisionService.actualizarComision(id, comisionUpdateDTO), HttpStatus.OK);
     }
 
      /**
@@ -88,8 +92,8 @@ public class ComisionController {
      * @return Lista de comisiones asociadas a la asignatura
      */
     @GetMapping("/por-asignatura/{asignaturaId}")
-    public ResponseEntity<List<Comision>> obtenerComisionesPorAsignatura(@PathVariable Long asignaturaId) {
-        List<Comision> comisiones = comisionService.obtenerComisionesPorAsignatura(asignaturaId);
+    public ResponseEntity<List<ComisionResponseDTO>> obtenerComisionesPorAsignatura(@PathVariable Long asignaturaId) {
+        List<ComisionResponseDTO> comisiones = comisionService.obtenerComisionesPorAsignatura(asignaturaId);
 
         if (comisiones.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -105,8 +109,8 @@ public class ComisionController {
      * @return Lista de comisiones asociadas al profesor
      */
     @GetMapping("/por-profesor/{profesorId}")
-    public ResponseEntity<List<Comision>> obtenerComisionesPorProfesor(@PathVariable Long profesorId) {
-        List<Comision> comisiones = comisionService.obtenerComisionesPorProfesor(profesorId);
+    public ResponseEntity<List<ComisionResponseDTO>> obtenerComisionesPorProfesor(@PathVariable Long profesorId) {
+        List<ComisionResponseDTO> comisiones = comisionService.obtenerComisionesPorProfesor(profesorId);
 
         if (comisiones.isEmpty()) {
             return ResponseEntity.noContent().build();

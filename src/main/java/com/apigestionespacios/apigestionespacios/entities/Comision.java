@@ -33,7 +33,7 @@ public class Comision {
 
     /**
      * * Relación con la entidad Usuario
-     * validar que sea del tipo profesor al dar del alta una inscripción
+     * validar que sea del tipo profesor al dar del alta una comisión
      */
     @ManyToOne(
             fetch = FetchType.EAGER
@@ -46,7 +46,6 @@ public class Comision {
     private Usuario profesor;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     @JoinColumn(
@@ -59,12 +58,20 @@ public class Comision {
 
     @OneToMany
     (
-            mappedBy = "comision", // Nombre de la propiedad en la clase Reserva que hace referencia a Comision
+            mappedBy = "comision", // Nombre de la propiedad en la clase Solicitud que hace referencia a Comision
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a la inscripción si se elimina la inscripción
             fetch = FetchType.EAGER // Cuando se carga la inscripción, se cargan todas las reservas asociadas a la inscripción
     )
     @JsonIgnore
     private List<Solicitud> solicitudes;
+
+    @OneToMany(
+            mappedBy = "comision",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<Reserva> reservas;
 
     @ManyToOne(
             fetch = FetchType.LAZY,

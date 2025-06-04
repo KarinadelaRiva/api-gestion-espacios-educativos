@@ -61,5 +61,35 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     """)
     List<Reserva> findReservasActualesByProfesorId(@Param("usuarioId") Long usuarioId);
 
+    /**
+     * Obtiene las reservas activas de una comisión, es decir, aquellas cuya fecha de inicio
+     * es anterior o igual a la fecha actual y cuya fecha de fin es posterior o igual a la actual.
+     *
+     * Las reservas se ordenan primero por día de la semana (de lunes a domingo), y luego por hora de inicio y fin.
+     *
+     * @param comisionId ID de la comisión para la cual se buscan las reservas.
+     * @return Lista de reservas activas ordenadas cronológicamente por día y horario.
+     */
+    @Query(value = """
+    SELECT *
+    FROM reserva
+    WHERE comision_id = :comisionId
+      AND fecha_inicio <= CURRENT_DATE
+      AND fecha_fin >= CURRENT_DATE
+    ORDER BY 
+      CASE dia
+        WHEN 'LUNES' THEN 1
+        WHEN 'MARTES' THEN 2
+        WHEN 'MIERCOLES' THEN 3
+        WHEN 'JUEVES' THEN 4
+        WHEN 'VIERNES' THEN 5
+        WHEN 'SABADO' THEN 6
+        WHEN 'DOMINGO' THEN 7
+      END,
+      hora_inicio ASC,
+      hora_fin ASC
+    """, nativeQuery = true)
+    List<Reserva> findReservasActivasPorComisionOrdenadas(
+            @Param("comisionId") Long comisionId);
 
 }
