@@ -40,28 +40,14 @@ public class ReservaService {
     }
 
     /**
-     * Convierte un DTO de reserva a una entidad Reserva.
+     * Convierte un DTO de creación de reserva a una entidad Reserva.
      *
-     * @param dto DTO de reserva a convertir.
+     * @param dto DTO de creación de reserva.
      * @return Entidad Reserva.
-     * @throws EntityValidationException si las fechas o horas no son válidas.
      */
-    public Reserva convertirDTOaReserva(ReservaCreateDTO dto) {
+    public Reserva ReservaCreateDTOtoReserva(ReservaCreateDTO dto) {
         Espacio espacio = espacioService.obtenerPorId(dto.getEspacioId());
         Comision comision = comisionService.obtenerPorId(dto.getComisionId());
-
-        if(espacio.getCapacidad() < comision.getCantidadAlumnos()) {
-            throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio.");
-        }
-
-        if (dto.getFechaFin().isBefore(dto.getFechaInicio())) {
-            throw new EntityValidationException("La fecha de fin no puede ser anterior a la de inicio.");
-        }
-
-        if (dto.getHoraFin().isBefore(dto.getHoraInicio())) {
-            throw new EntityValidationException("La hora de fin no puede ser anterior a la de inicio.");
-        }
-
         DiaSemana dia = DiaSemana.desdeDayOfWeek(dto.getFechaInicio().getDayOfWeek());
 
         return Reserva.builder()
@@ -81,7 +67,7 @@ public class ReservaService {
      * @param r Entidad Reserva a convertir.
      * @return DTO de respuesta de reserva.
      */
-    private ReservaResponseDTO reservaAReservaResponseDTO(Reserva r) {
+    private ReservaResponseDTO reservaToReservaResponseDTO(Reserva r) {
         return ReservaResponseDTO.builder()
                 .id(r.getId())
                 .fechaInicio(r.getFechaInicio())
@@ -102,8 +88,7 @@ public class ReservaService {
      * @return Lista de reservas en formato DTO.
      */
     public List<ReservaResponseDTO> listarReservasDTO() {
-        List<Reserva> reservas = reservaRepository.findAll();
-        return listaReservasAReservasResponseDTO(reservas);
+        return listaReservasAReservasResponseDTO(reservaRepository.findAll());
     }
 
     /**
@@ -114,19 +99,8 @@ public class ReservaService {
      */
     public List<ReservaResponseDTO> listaReservasAReservasResponseDTO(List<Reserva> reservas) {
         return reservas.stream()
-                .map(r -> ReservaResponseDTO.builder()
-                        .id(r.getId())
-                        .fechaInicio(r.getFechaInicio())
-                        .fechaFin(r.getFechaFin())
-                        .dia(r.getDia())
-                        .horaInicio(r.getHoraInicio())
-                        .horaFin(r.getHoraFin())
-                        .nombreEspacio(r.getEspacio().getNombre())
-                        .nombreComision(r.getComision().getNombre())
-                        .nombreAsignatura(r.getComision().getAsignatura().getNombre())
-                        .nombreDocente(r.getComision().getProfesor().getNombre() + " " + r.getComision().getProfesor().getApellido())
-                        .build())
-                .collect(Collectors.toList());
+                .map(this::reservaToReservaResponseDTO)
+                .toList();
     }
 
     /**
@@ -137,7 +111,23 @@ public class ReservaService {
      * @throws ReservaSolapadaException si la reserva se solapa con otra existente.
      */
     public Reserva crearReservaDesdeDTO(ReservaCreateDTO dto) {
-        Reserva reserva = convertirDTOaReserva(dto);
+        Espacio espacio = espacioService.obtenerPorId(dto.getEspacioId());
+        Comision comision = comisionService.obtenerPorId(dto.getComisionId());
+
+        if(espacio.getCapacidad() < comision.getCantidadAlumnos()) {
+            throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio.");
+        }
+
+        if (dto.getFechaFin().isBefore(dto.getFechaInicio())) {
+            throw new EntityValidationException("La fecha de fin no puede ser anterior a la de inicio.");
+        }
+
+        if (dto.getHoraFin().isBefore(dto.getHoraInicio())) {
+            throw new EntityValidationException("La hora de fin no puede ser anterior a la de inicio.");
+        }
+
+        Reserva reserva = ReservaCreateDTOtoReserva(dto);
+
         if (existeSolapamiento(reserva)) {
             throw new ReservaSolapadaException("El espacio ya está reservado en ese horario");
         }
@@ -202,21 +192,34 @@ public class ReservaService {
      * @param solicitud Solicitud que contiene los datos para la reserva.
      */
     public void generarDesdeSolicitud(Solicitud solicitud) {
-        Reserva reserva = new Reserva();
+        ReservaCreateDTO dto = ReservaCreateDTO.builder()
+                .fechaInicio(solicitud.getFechaInicio())
+                .fechaFin(solicitud.getFechaFin())
+                .horaInicio(solicitud.getHoraInicio())
+                .horaFin(solicitud.getHoraFin())
+                .espacioId(solicitud.getNuevoEspacio().getId())
+                .comisionId(solicitud.getComision().getId())
+                .build();
 
-        if(solicitud.getNuevoEspacio().getCapacidad() < solicitud.getComision().getCantidadAlumnos()) {
-            throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio.");
-        }
+        this.crearReservaDesdeDTO(dto);
+    }
 
-        reserva.setFechaInicio(solicitud.getFechaInicio());
-        reserva.setFechaFin(solicitud.getFechaFin());
-        reserva.setDia(DiaSemana.desdeDayOfWeek(solicitud.getFechaInicio().getDayOfWeek()));
-        reserva.setHoraInicio(solicitud.getHoraInicio());
-        reserva.setHoraFin(solicitud.getHoraFin());
-        reserva.setEspacio(solicitud.getNuevoEspacio());
-        reserva.setComision(solicitud.getComision());
+    /**
+     * Modificar una reserva existente a partir de una solicitud.
+     *
+     * @param solicitud Solicitud que contiene los datos para actualizar la reserva.
+     */
+    public void modificarDesdeSolicitud(Solicitud solicitud) {
+        ReservaUpdateDTO dto = ReservaUpdateDTO.builder()
+                .id(solicitud.getReservaOriginal().getId())
+                .fechaInicio(solicitud.getFechaInicio())
+                .fechaFin(solicitud.getFechaFin())
+                .horaInicio(solicitud.getHoraInicio())
+                .horaFin(solicitud.getHoraFin())
+                .espacioId(solicitud.getNuevoEspacio().getId())
+                .build();
 
-        reservaRepository.save(reserva);
+        this.actualizarReservaDesdeDTO(dto);
     }
 
     /**
@@ -302,7 +305,7 @@ public class ReservaService {
      */
     public ReservaResponseDTO obtenerReservaDTO(Long id) {
         Reserva reserva = obtenerReserva(id);
-        return reservaAReservaResponseDTO(reserva);
+        return reservaToReservaResponseDTO(reserva);
     }
 
 
@@ -314,7 +317,7 @@ public class ReservaService {
      */
     public Page<ReservaResponseDTO> obtenerReservasPaginadasDTO(Pageable pageable) {
         return reservaRepository.findAll(pageable)
-                .map(this::reservaAReservaResponseDTO);
+                .map(this::reservaToReservaResponseDTO);
     }
 
     /**
