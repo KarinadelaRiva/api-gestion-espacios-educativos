@@ -6,6 +6,7 @@ import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundExce
 import com.apigestionespacios.apigestionespacios.repository.UsuarioRepository;
 import com.apigestionespacios.apigestionespacios.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository) {
@@ -45,6 +49,7 @@ public class UsuarioService {
 //            throw new RuntimeException("El rol especificado no existe");
 //        }
 
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 

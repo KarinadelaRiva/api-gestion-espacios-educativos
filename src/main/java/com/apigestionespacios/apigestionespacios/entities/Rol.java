@@ -2,6 +2,7 @@ package com.apigestionespacios.apigestionespacios.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 @Builder
-public class Rol {
+public class Rol implements GrantedAuthority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +33,10 @@ public class Rol {
             inverseJoinColumns = @JoinColumn(name = "permiso_id")
     )
     private Set<Permiso> permisos = new HashSet<>();
+
+    @Override
+    public String getAuthority() {
+        return this.nombre;
+    }
 
 }

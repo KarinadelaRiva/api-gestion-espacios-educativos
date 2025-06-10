@@ -3,8 +3,11 @@ package com.apigestionespacios.apigestionespacios.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -38,7 +41,7 @@ public class Usuario {
 
     @Column(
             nullable = false,
-            length = 50
+            length = 100
     )
     private String password;
 
@@ -53,4 +56,8 @@ public class Usuario {
     )
     @JsonIgnore
     private List<Comision> comisiones;
+
+    public Set<? extends GrantedAuthority> getRoles() {
+        return Collections.singleton(rol);
+    }
 } 
