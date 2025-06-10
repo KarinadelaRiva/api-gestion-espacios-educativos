@@ -81,3 +81,4 @@ public class UsuarioService {
         return usuarioRepository.findByRolNombre(nombreRol);
     }
 }
+

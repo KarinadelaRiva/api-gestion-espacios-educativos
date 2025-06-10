@@ -67,7 +67,7 @@ public class ReservaService {
      * @param r Entidad Reserva a convertir.
      * @return DTO de respuesta de reserva.
      */
-    private ReservaResponseDTO reservaToReservaResponseDTO(Reserva r) {
+    public ReservaResponseDTO reservaToReservaResponseDTO(Reserva r) {
         return ReservaResponseDTO.builder()
                 .id(r.getId())
                 .fechaInicio(r.getFechaInicio())

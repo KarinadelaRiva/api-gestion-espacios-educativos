@@ -3,6 +3,7 @@ package com.apigestionespacios.apigestionespacios.entities;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
@@ -10,7 +11,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Builder
+@SuperBuilder
 @DiscriminatorValue("AULA")
 public class Aula extends Espacio{
 }

@@ -1,5 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
+import com.apigestionespacios.apigestionespacios.dtos.EspacioCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.EspacioResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.EspacioUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.ReservaResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.service.EspacioService;
@@ -21,48 +25,48 @@ public class EspacioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Espacio>> listar() {
+    public ResponseEntity<List<EspacioResponseDTO>> listar() {
         return new ResponseEntity<>(espacioService.obtenerTodos(), HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<Espacio> obtenerPorId(@PathVariable Long id) {
-        return new ResponseEntity<>(espacioService.obtenerPorId(id), HttpStatus.OK);
+    public ResponseEntity<EspacioResponseDTO> obtenerPorId(@PathVariable Long id) {
+        return new ResponseEntity<>(espacioService.obtenerDTOPorId(id), HttpStatus.OK);
     }
 
     @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<Espacio> obtenerPorNombre(@PathVariable String nombre) {
+    public ResponseEntity<EspacioResponseDTO> obtenerPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(espacioService.obtenerPorNombre(nombre), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/reservas")
-    public ResponseEntity<List<Reserva>> obtenerReservasPorEspacio(@PathVariable Long id) {
+    public ResponseEntity<List<ReservaResponseDTO>> obtenerReservasPorEspacio(@PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerReservasPorEspacio(id), HttpStatus.OK);
     }
 
     @GetMapping("/capacidad/{capacidad}")
-    public ResponseEntity<List<Espacio>> obtenerPorCapacidadMinima(@PathVariable Integer capacidad) {
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerPorCapacidadMinima(@PathVariable Integer capacidad) {
         return new ResponseEntity<>(espacioService.obtenerPorCapacidadMinima(capacidad), HttpStatus.OK);
     }
 
     @GetMapping("/proyector")
-    public ResponseEntity<List<Espacio>> obtenerConProyector() {
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerConProyector() {
         return new ResponseEntity<>(espacioService.obtenerConProyector(), HttpStatus.OK);
     }
 
     @GetMapping("/tv")
-    public ResponseEntity<List<Espacio>> obtenerConTV() {
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerConTV() {
         return new ResponseEntity<>(espacioService.obtenerConTV(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Espacio> crear(@RequestBody Espacio espacio) {
+    public ResponseEntity<Espacio> crear(@RequestBody EspacioCreateDTO espacio) {
         return new  ResponseEntity<>(espacioService.guardar(espacio), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Espacio> actualizar(@PathVariable Long id, @RequestBody Espacio espacio) {
-        return new ResponseEntity<>(espacioService.actualizar(id, espacio), HttpStatus.OK);
+    public ResponseEntity<Espacio> actualizar(@PathVariable Long id, @RequestBody EspacioUpdateDTO espacio) {
+        return new ResponseEntity<>(espacioService.actualizar(espacio), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
