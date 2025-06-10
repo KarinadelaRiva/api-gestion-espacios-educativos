@@ -129,4 +129,11 @@ public class AsignaturaService {
         }
         asignaturaRepository.deleteById(id);
     }
+
+    public List<AsignaturaResponseDTO> obtenerAsignaturasPorCarreraId(Long carreraId) {
+        return asignaturaRepository.findByCarreraId(carreraId).stream()
+                .map(AsignaturaService::AsignaturaToAsignaturaResponseDTO)
+                .toList();
+    }
+
 }

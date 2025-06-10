@@ -1,5 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
+import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.service.CarreraService;
@@ -20,16 +24,24 @@ public class CarreraController {
         this.carreraService = carreraService;
     }
 
+    /**
+     * Endpoint para listar carreras.
+     * Permite filtrar por ID o nombre.
+     *
+     * @param id     ID de la carrera (opcional).
+     * @param nombre Nombre de la carrera (opcional).
+     * @return Lista de carreras filtradas o todas las carreras si no se especifica filtro.
+     */
     @GetMapping
-    public ResponseEntity<List<Carrera>> listar(
+    public ResponseEntity<List<CarreraResponseDTO>> listar(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String nombre
     )
     {
         if (id != null && nombre != null) {
-            return new ResponseEntity<>(List.of(carreraService.obtenerPorId(id)), HttpStatus.OK);
+            return new ResponseEntity<>(List.of(carreraService.obtenerDTOPorId(id)), HttpStatus.OK);
         } else if (id != null) {
-            return new ResponseEntity<>(List.of(carreraService.obtenerPorId(id)), HttpStatus.OK);
+            return new ResponseEntity<>(List.of(carreraService.obtenerDTOPorId(id)), HttpStatus.OK);
         } else if (nombre != null) {
             return new ResponseEntity<>(List.of(carreraService.obtenerPorNombre(nombre)), HttpStatus.OK);
         } else {
@@ -38,12 +50,12 @@ public class CarreraController {
     }
 
     @GetMapping("/{carreraId}/asignaturas")
-    public ResponseEntity<List<Asignatura>> obtenerAsignaturasDeCarrera(@PathVariable Long carreraId) {
+    public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturasDeCarrera(@PathVariable Long carreraId) {
         return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(carreraId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Carrera> crear(@RequestBody Carrera carrera) {
+    public ResponseEntity<Carrera> crear(@RequestBody CarreraCreateDTO carrera) {
         return new  ResponseEntity<>(carreraService.crearCarrera(carrera), HttpStatus.CREATED);
     }
 
@@ -57,7 +69,7 @@ public class CarreraController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Carrera> actualizar(@PathVariable Long id, @RequestBody Carrera carrera) {
+    public ResponseEntity<Carrera> actualizar(@PathVariable Long id, @RequestBody CarreraUpdateDTO carrera) {
         return new ResponseEntity<>(carreraService.actualizarCarrera(id, carrera), HttpStatus.OK);
     }
 
@@ -75,21 +87,5 @@ public class CarreraController {
         carreraService.eliminarAsignaturaDeCarrera(id, asignaturaIds);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    /* @PutMapping("/{carreraId}/asignaturas/{asignaturaId}")
-    public ResponseEntity<Carrera> asignarAsignatura(@PathVariable Long carreraId, @PathVariable Long asignaturaId) {
-        return new ResponseEntity<>(carreraService.asignarAsignatura(carreraId, asignaturaId), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{carreraId}/asignaturas/{asignaturaId}")
-    public ResponseEntity<Carrera> quitarAsignatura(@PathVariable Long carreraId, @PathVariable Long asignaturaId) {
-        return new ResponseEntity<>(carreraService.quitarAsignatura(carreraId, asignaturaId), HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/asignaturas")
-    public ResponseEntity<List<Asignatura>> obtenerAsignaturas(@PathVariable Long id) {
-        return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(id), HttpStatus.OK);
-    } */
-
 
 }

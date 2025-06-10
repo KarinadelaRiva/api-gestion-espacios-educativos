@@ -1,5 +1,9 @@
 package com.apigestionespacios.apigestionespacios.service;
 
+import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.CarreraUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;
@@ -17,13 +21,38 @@ public class CarreraService {
     private final CarreraRepository carreraRepository;
     private final AsignaturaService asignaturaService;
 
+    @Autowired
     public CarreraService(CarreraRepository carreraRepository, AsignaturaService asignaturaService) {
         this.carreraRepository = carreraRepository;
         this.asignaturaService = asignaturaService;
     }
 
-    public List<Carrera> obtenerTodas() {
-        return carreraRepository.findAll();
+    public Carrera carreraCreateDTOtoCarrera(CarreraCreateDTO carrera) {
+        return Carrera.builder()
+                .nombre(carrera.getNombre())
+                .build();
+    }
+
+    public CarreraResponseDTO carreraToCarreraResponseDTO(Carrera carrera) {
+        return CarreraResponseDTO.builder()
+                .id(carrera.getId())
+                .nombre(carrera.getNombre())
+                .asignaturas(asignaturaService.obtenerAsignaturasPorCarreraId(carrera.getId()).stream()
+                        .map(asignatura -> "Código: " + asignatura.getCodigo() + " - Nombre: " + asignatura.getNombre())
+                        .toList())
+                .build();
+    }
+
+    public List<CarreraResponseDTO> obtenerTodas() {
+        return carreraRepository.findAll().stream()
+                .map(this::carreraToCarreraResponseDTO)
+                .toList();
+    }
+
+    public CarreraResponseDTO obtenerDTOPorId(Long id) {
+        return carreraRepository.findById(id)
+                .map(this::carreraToCarreraResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Carrera no encontrada con ID: " + id));
     }
 
     public Carrera obtenerPorId(Long id) {
@@ -31,32 +60,38 @@ public class CarreraService {
                 .orElseThrow(() -> new RuntimeException("Carrera no encontrada con ID: " + id));
     }
 
-    public Carrera obtenerPorNombre(String nombre) {
+    public CarreraResponseDTO obtenerPorNombre(String nombre) {
         return carreraRepository.findByNombre(nombre)
+                .map(this::carreraToCarreraResponseDTO)
                 .orElseThrow(() -> new RuntimeException("Carrera no econtrada con nombre: " + nombre));
     }
 
-    public List<Asignatura> obtenerAsignaturasDeCarrera(Long carreraId) {
-        Carrera carrera = obtenerPorId(carreraId);
-        return carrera.getAsignaturas();
+    public List<AsignaturaResponseDTO> obtenerAsignaturasDeCarrera(Long carreraId) {
+        return asignaturaService.obtenerAsignaturasPorCarreraId(carreraId);
     }
 
-    public Carrera crearCarrera(Carrera carrera) {
+    public Carrera crearCarrera(CarreraCreateDTO carreraDTO) {
+        Carrera carrera = carreraCreateDTOtoCarrera(carreraDTO);
         if (carreraRepository.existsByNombre(carrera.getNombre())) {
             throw new ResourceConflictException("Ya existe una carrera con ese nombre.");
         }
         return carreraRepository.save(carrera);
     }
 
-    public Carrera actualizarCarrera(Long id, Carrera nueva) {
+    public Carrera actualizarCarrera(Long id, CarreraUpdateDTO nueva) {
         Carrera existente = obtenerPorId(id);
+
+        if(carreraRepository.existsByNombre(nueva.getNombre())) {
+            throw new ResourceConflictException("Ya existe una carrera con ese nombre.");
+        }
+
         existente.setNombre(nueva.getNombre());
         return carreraRepository.save(existente);
     }
 
     public void eliminarCarrera(Long id) {
         if (!carreraRepository.existsById(id)) {
-            throw new ResourceNotFoundException("No, se pudo eliminarCarrera. Carrera no encontrada.");
+            throw new ResourceNotFoundException("No existe una carrera con ID: " + id);
         }
         carreraRepository.deleteById(id);
     }
@@ -102,32 +137,5 @@ public class CarreraService {
         carrera.setAsignaturas(asignaturasCarrera);
         carreraRepository.save(carrera);
     }
-
-    /* public Carrera asignarAsignatura(Long carreraId, Long asignaturaId) {
-        Carrera carrera = obtenerPorId(carreraId);
-        Asignatura asignatura = asignaturaRepository.findById(asignaturaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Asignatura no encontrada con ID: " + asignaturaId));
-
-        if (!carrera.getAsignaturas().contains(asignatura)) {
-            carrera.getAsignaturas().add(asignatura);
-            return carreraRepository.save(carrera);
-        }
-
-        return carrera;
-    }
-
-    public Carrera eliminarAsignatura(Long carreraId, Long asignaturaId) {
-        Carrera carrera = obtenerPorId(carreraId);
-        Asignatura asignatura = asignaturaRepository.findById(asignaturaId)
-                .orElseThrow(() -> new ResourceNotFoundException("Asignatura no encontrada con ID: " + asignaturaId));
-
-        carrera.getAsignaturas().remove(asignatura);
-        return carreraRepository.save(carrera);
-    }
-
-    public List<Asignatura> obtenerAsignaturasDeCarrera(Long carreraId) {
-        Carrera carrera = obtenerPorId(carreraId);
-        return carrera.getAsignaturas();
-    }*/
 
 }

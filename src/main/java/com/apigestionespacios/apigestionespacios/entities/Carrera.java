@@ -23,7 +23,8 @@ public class Carrera {
 
     @Column(
             nullable = false,
-            length = 50
+            length = 50,
+            unique = true
     )
     private String nombre;
 
