@@ -114,8 +114,8 @@ public class AsignaturaService {
      * @return Asignatura actualizada.
      * @throws ResourceNotFoundException si no se encuentra la asignatura.
      */
-    public Asignatura actualizarAsignatura(Long id, AsignaturaUpdateDTO nueva) {
-        Asignatura existente = obtenerPorId(id);
+    public Asignatura actualizarAsignatura(AsignaturaUpdateDTO nueva) {
+        Asignatura existente = obtenerPorId(nueva.getId());
 
         existente.setNombre(nueva.getNombre());
         existente.setRequiereLaboratorio(nueva.getRequiereLaboratorio());

@@ -130,13 +130,12 @@ public class EspacioController {
      * Endpoint para actualizar un espacio existente.
      * Solo accesible por administradores.
      *
-     * @param id ID del espacio a actualizar.
      * @param espacio Objeto DTO con los datos actualizados del espacio.
      * @return Espacio actualizado.
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Espacio> actualizarEspacio(@PathVariable Long id, @RequestBody EspacioUpdateDTO espacio) {
+    public ResponseEntity<Espacio> actualizarEspacio(@RequestBody EspacioUpdateDTO espacio) {
         return new ResponseEntity<>(espacioService.actualizar(espacio), HttpStatus.OK);
     }
 

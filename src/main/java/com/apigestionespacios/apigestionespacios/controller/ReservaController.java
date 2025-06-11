@@ -57,22 +57,12 @@ public class ReservaController {
      * Endpoint para actualizar una reserva existente.
      * Solo accesible por administradores.
      *
-     * @param id ID de la reserva a actualizar.
      * @param reservaUpdateDTO Objeto DTO con los datos actualizados de la reserva.
      * @return Reserva actualizada.
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Reserva> actualizarReserva(
-            @PathVariable Long id,
-            @Valid @RequestBody ReservaUpdateDTO reservaUpdateDTO) {
-
-        // Valida que el ID de path y el DTO coincidan para evitar inconsistencia
-        if (!id.equals(reservaUpdateDTO.getId())) {
-            return ResponseEntity.badRequest()
-                    .body(null);
-        }
-
+    public ResponseEntity<Reserva> actualizarReserva(@Valid @RequestBody ReservaUpdateDTO reservaUpdateDTO) {
         Reserva reservaActualizada = reservaService.actualizarReservaDesdeDTO(reservaUpdateDTO);
         return ResponseEntity.ok(reservaActualizada);
     }
@@ -181,7 +171,7 @@ public class ReservaController {
      */
     @PreAuthorize("hasRole('PROFESOR')")
     @GetMapping("/mis-reservas/vigentes")
-    public ResponseEntity<List<ReservaResponseDTO>> getMisReservasVigentes(Authentication authentication) {
+    public ResponseEntity<List<ReservaResponseDTO>> obtenerMisReservasVigentes(Authentication authentication) {
         Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
         Long profesorId = usuarioLogueado.getId();
 

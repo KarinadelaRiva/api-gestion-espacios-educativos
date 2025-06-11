@@ -78,8 +78,9 @@ public class CarreraService {
         return carreraRepository.save(carrera);
     }
 
-    public Carrera actualizarCarrera(Long id, CarreraUpdateDTO nueva) {
-        Carrera existente = obtenerPorId(id);
+    public Carrera actualizarCarrera(CarreraUpdateDTO nueva) {
+        //Carrera existente = obtenerPorId(id);
+        Carrera existente = obtenerPorId(nueva.getId());
 
         if(carreraRepository.existsByNombre(nueva.getNombre())) {
             throw new ResourceConflictException("Ya existe una carrera con ese nombre.");

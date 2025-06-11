@@ -99,14 +99,13 @@ public class CarreraController {
      * Endpoint para actualizar una carrera existente.
      * Solo accesible por administradores.
      *
-     * @param id ID de la carrera a actualizar.
      * @param carrera Objeto DTO con los nuevos datos de la carrera.
      * @return Carrera actualizada.
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Carrera> actualizarCarrera(@PathVariable Long id, @RequestBody CarreraUpdateDTO carrera) {
-        return new ResponseEntity<>(carreraService.actualizarCarrera(id, carrera), HttpStatus.OK);
+    public ResponseEntity<Carrera> actualizarCarrera(@RequestBody CarreraUpdateDTO carrera) {
+        return new ResponseEntity<>(carreraService.actualizarCarrera(carrera), HttpStatus.OK);
     }
 
     /**

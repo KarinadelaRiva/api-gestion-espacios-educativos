@@ -73,14 +73,13 @@ public class ComisionController {
      * Valida que el ID de la comisión y el DTO de actualización sean válidos.
      * Solo accesible por administradores y profesores.
      *
-     * @param id ID de la comisión a actualizar
      * @param comisionUpdateDTO DTO de actualización de comisión
      * @return Comisión actualizada
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    public ResponseEntity<Comision> actualizarComision(@PathVariable Long id, @Valid @RequestBody ComisionUpdateDTO comisionUpdateDTO) {
-        return new ResponseEntity<>(comisionService.actualizarComision(id, comisionUpdateDTO), HttpStatus.OK);
+    public ResponseEntity<Comision> actualizarComision(@Valid @RequestBody ComisionUpdateDTO comisionUpdateDTO) {
+        return new ResponseEntity<>(comisionService.actualizarComision(comisionUpdateDTO), HttpStatus.OK);
     }
 
      /**

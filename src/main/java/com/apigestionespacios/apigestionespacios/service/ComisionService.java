@@ -122,15 +122,14 @@ public class ComisionService {
     }
 
     /**
-     *  Actualiza una comisión existente a partir de un DTO.
+     * Actualiza una comisión existente a partir de un DTO.
      * Valida que el nombre, profesor y carrera sean correctos.
      *
-     * @param id ID de la comisión a actualizar
      * @param dto DTO con los nuevos datos de la comisión
      * @return Comisión actualizada
      */
-    public Comision actualizarComision(Long id, ComisionUpdateDTO dto) {
-        Comision existente = obtenerComisionPorId(id);
+    public Comision actualizarComision(ComisionUpdateDTO dto) {
+        Comision existente = obtenerComisionPorId(dto.getId());
         existente.setCantidadAlumnos(dto.getCantidadAlumnos());
         existente.setNombre(dto.getNombre());
         existente.setProfesor(usuarioService.obtenerPorId(dto.getProfesorId()));

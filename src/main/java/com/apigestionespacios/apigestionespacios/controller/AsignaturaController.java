@@ -79,14 +79,13 @@ public class AsignaturaController {
      * Actualiza una asignatura existente.
      * Permite a administradores actualizar los datos de una asignatura específica.
      *
-     * @param id ID de la asignatura a actualizar.
      * @param dto DTO con los datos actualizados de la asignatura.
      * @return Asignatura actualizada con formato DTO.
      */
-    @PutMapping("/{id}")
+    @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Asignatura> actualizarAsignatura(@PathVariable Long id, @Valid @RequestBody AsignaturaUpdateDTO dto) {
-        return new ResponseEntity<>(asignaturaService.actualizarAsignatura(id, dto), HttpStatus.OK);
+    public ResponseEntity<Asignatura> actualizarAsignatura(@Valid @RequestBody AsignaturaUpdateDTO dto) {
+        return new ResponseEntity<>(asignaturaService.actualizarAsignatura(dto), HttpStatus.OK);
     }
 
     /**
