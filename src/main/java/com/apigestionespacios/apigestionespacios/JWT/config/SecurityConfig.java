@@ -67,13 +67,16 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
+                        //requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
                         /*
                         .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
                          */
+                        .requestMatchers(HttpMethod.GET, "/reservas/cronograma-por-dia").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/reservas/cronograma").permitAll()
+
 
                         .anyRequest().authenticated()
                 )

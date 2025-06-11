@@ -4,12 +4,12 @@ import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
 import com.apigestionespacios.apigestionespacios.dtos.CarreraCreateDTO;
 import com.apigestionespacios.apigestionespacios.dtos.CarreraResponseDTO;
 import com.apigestionespacios.apigestionespacios.dtos.CarreraUpdateDTO;
-import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.service.CarreraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,13 +27,15 @@ public class CarreraController {
     /**
      * Endpoint para listar carreras.
      * Permite filtrar por ID o nombre.
+     * Los administradores y profesores pueden acceder a esta información.
      *
      * @param id     ID de la carrera (opcional).
      * @param nombre Nombre de la carrera (opcional).
      * @return Lista de carreras filtradas o todas las carreras si no se especifica filtro.
      */
     @GetMapping
-    public ResponseEntity<List<CarreraResponseDTO>> listar(
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<List<CarreraResponseDTO>> obtenerCarreras(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String nombre
     )
@@ -49,17 +51,42 @@ public class CarreraController {
         }
     }
 
+    /**
+     * Endpoint para obtener las asignaturas de una carrera específica.
+     * Permite a administradores y profesores acceder a las asignaturas de una carrera.
+     *
+     * @param carreraId ID de la carrera.
+     * @return Lista de asignaturas asociadas a la carrera.
+     */
     @GetMapping("/{carreraId}/asignaturas")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
     public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturasDeCarrera(@PathVariable Long carreraId) {
         return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(carreraId), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para crear una nueva carrera.
+     * Solo accesible por administradores.
+     *
+     * @param carrera Objeto DTO con los datos de la carrera a crear.
+     * @return Carrera creada con su ID asignado.
+     */
     @PostMapping
-    public ResponseEntity<Carrera> crear(@RequestBody CarreraCreateDTO carrera) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Carrera> crearCarrera(@RequestBody CarreraCreateDTO carrera) {
         return new  ResponseEntity<>(carreraService.crearCarrera(carrera), HttpStatus.CREATED);
     }
 
+    /**
+     * Endpoint para asignar asignaturas a una carrera.
+     * Solo accesible por administradores.
+     *
+     * @param carreraId ID de la carrera a la que se le asignarán las asignaturas.
+     * @param asignaturaIds Lista de IDs de las asignaturas a asignar.
+     * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
+     */
     @PostMapping("/{carreraId}/asignaturas")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> asignarAsignaturaACarrera(
             @PathVariable Long carreraId,
             @RequestParam List<Long> asignaturaIds
@@ -68,19 +95,45 @@ public class CarreraController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Endpoint para actualizar una carrera existente.
+     * Solo accesible por administradores.
+     *
+     * @param id ID de la carrera a actualizar.
+     * @param carrera Objeto DTO con los nuevos datos de la carrera.
+     * @return Carrera actualizada.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Carrera> actualizar(@PathVariable Long id, @RequestBody CarreraUpdateDTO carrera) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Carrera> actualizarCarrera(@PathVariable Long id, @RequestBody CarreraUpdateDTO carrera) {
         return new ResponseEntity<>(carreraService.actualizarCarrera(id, carrera), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para eliminar una carrera por su ID.
+     * Solo accesible por administradores.
+     *
+     * @param id ID de la carrera a eliminar.
+     * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
+     */
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Carrera> eliminar(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<Carrera> eliminarCarrera(@PathVariable Long id) {
         carreraService.eliminarCarrera(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Endpoint para eliminar asignaturas de una carrera.
+     * Solo accesible por administradores.
+     *
+     * @param id ID de la carrera de la que se eliminarán las asignaturas.
+     * @param asignaturaIds Lista de IDs de las asignaturas a eliminar de la carrera.
+     * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
+     */
     @DeleteMapping("/{id}/asignaturas")
-    public ResponseEntity<Void> eliminarAsignaturaDeCarrera(
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> removerAsignaturaDeCarrera(
             @PathVariable Long id,
             @RequestParam List<Long> asignaturaIds
     ) {

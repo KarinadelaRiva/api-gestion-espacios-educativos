@@ -10,6 +10,7 @@ import com.apigestionespacios.apigestionespacios.service.EspacioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,53 +25,131 @@ public class EspacioController {
         this.espacioService = espacioService;
     }
 
+    /**
+     * Endpoint para listar todos los espacios.
+     * Permite a administradores y profesores acceder a la lista de espacios.
+     *
+     * @return Lista de espacios en formato DTO.
+     */
     @GetMapping
-    public ResponseEntity<List<EspacioResponseDTO>> listar() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspacios() {
         return new ResponseEntity<>(espacioService.obtenerTodos(), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener un espacio por su ID.
+     * Permite a administradores y profesores acceder a los detalles de un espacio específico.
+     *
+     * @param id ID del espacio a buscar.
+     * @return Espacio encontrado en formato DTO.
+     */
     @GetMapping("/id/{id}")
-    public ResponseEntity<EspacioResponseDTO> obtenerPorId(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorId(@PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerDTOPorId(id), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener un espacio por su nombre.
+     * Permite a administradores y profesores acceder a los detalles de un espacio específico por su nombre.
+     *
+     * @param nombre Nombre del espacio a buscar.
+     * @return Espacio encontrado en formato DTO.
+     */
     @GetMapping("/nombre/{nombre}")
-    public ResponseEntity<EspacioResponseDTO> obtenerPorNombre(@PathVariable String nombre) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(espacioService.obtenerPorNombre(nombre), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener las reservas de un espacio específico.
+     * Solo accesible por administradores.
+     *
+     * @param id ID del espacio.
+     * @return Lista de reservas asociadas al espacio.
+     */
     @GetMapping("/{id}/reservas")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerReservasPorEspacio(@PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerReservasPorEspacio(id), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener espacios por capacidad mínima.
+     * Permite a administradores y profesores filtrar espacios por capacidad.
+     *
+     * @param capacidad Capacidad mínima del espacio.
+     * @return Lista de espacios que cumplen con la capacidad mínima.
+     */
     @GetMapping("/capacidad/{capacidad}")
-    public ResponseEntity<List<EspacioResponseDTO>> obtenerPorCapacidadMinima(@PathVariable Integer capacidad) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosPorCapacidadMinima(@PathVariable Integer capacidad) {
         return new ResponseEntity<>(espacioService.obtenerPorCapacidadMinima(capacidad), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener espacios con proyector.
+     * Permite a administradores y profesores acceder a los espacios que cuentan con proyector.
+     *
+     * @return Lista de espacios con proyector en formato DTO.
+     */
     @GetMapping("/proyector")
-    public ResponseEntity<List<EspacioResponseDTO>> obtenerConProyector() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosConProyector() {
         return new ResponseEntity<>(espacioService.obtenerConProyector(), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para obtener espacios con TV.
+     * Permite a administradores y profesores acceder a los espacios que cuentan con TV.
+     *
+     * @return Lista de espacios con TV en formato DTO.
+     */
     @GetMapping("/tv")
-    public ResponseEntity<List<EspacioResponseDTO>> obtenerConTV() {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosConTV() {
         return new ResponseEntity<>(espacioService.obtenerConTV(), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para crear un nuevo espacio.
+     * Solo accesible por administradores.
+     *
+     * @param espacio Objeto DTO con los datos del espacio a crear.
+     * @return Espacio creado con su ID asignado.
+     */
     @PostMapping
-    public ResponseEntity<Espacio> crear(@RequestBody EspacioCreateDTO espacio) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Espacio> crearEspacio(@RequestBody EspacioCreateDTO espacio) {
         return new  ResponseEntity<>(espacioService.guardar(espacio), HttpStatus.CREATED);
     }
 
+    /**
+     * Endpoint para actualizar un espacio existente.
+     * Solo accesible por administradores.
+     *
+     * @param id ID del espacio a actualizar.
+     * @param espacio Objeto DTO con los datos actualizados del espacio.
+     * @return Espacio actualizado.
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Espacio> actualizar(@PathVariable Long id, @RequestBody EspacioUpdateDTO espacio) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Espacio> actualizarEspacio(@PathVariable Long id, @RequestBody EspacioUpdateDTO espacio) {
         return new ResponseEntity<>(espacioService.actualizar(espacio), HttpStatus.OK);
     }
 
+    /**
+     * Endpoint para eliminar un espacio por su ID.
+     * Solo accesible por administradores.
+     *
+     * @param id ID del espacio a eliminar.
+     * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
+     */
     @DeleteMapping("/{id}")
-    public  ResponseEntity<Espacio> eliminar(@PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<Espacio> eliminarEspacio(@PathVariable Long id) {
         espacioService.eliminar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
