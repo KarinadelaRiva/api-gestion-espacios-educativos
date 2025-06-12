@@ -6,6 +6,8 @@ import com.apigestionespacios.apigestionespacios.dtos.CarreraResponseDTO;
 import com.apigestionespacios.apigestionespacios.dtos.CarreraUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.service.CarreraService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/carreras")
+@Tag(name = "Carreras", description = "Operaciones relacionadas con las carreras.")
 public class CarreraController {
     private final CarreraService carreraService;
 
@@ -35,6 +38,7 @@ public class CarreraController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    @Operation(summary = "Filtrar carreras por ID o nombre.", description = "Permite a administradores y profesores filtrar entre las distintas carreras. En caso de no proporcionar parámetros devolverá el listado total.")
     public ResponseEntity<List<CarreraResponseDTO>> obtenerCarreras(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String nombre
@@ -60,6 +64,7 @@ public class CarreraController {
      */
     @GetMapping("/{carreraId}/asignaturas")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    @Operation(summary = "Obtener asignaturas de una carrera.", description = "Permite a administradores y profesores obtener un listado de las asignaturas de una carrera específica.")
     public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturasDeCarrera(@PathVariable Long carreraId) {
         return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(carreraId), HttpStatus.OK);
     }
@@ -73,6 +78,7 @@ public class CarreraController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Crear nueva carrera.", description = "Permite a administradores crear una nueva carrera.")
     public ResponseEntity<Carrera> crearCarrera(@RequestBody CarreraCreateDTO carrera) {
         return new  ResponseEntity<>(carreraService.crearCarrera(carrera), HttpStatus.CREATED);
     }
@@ -87,6 +93,7 @@ public class CarreraController {
      */
     @PostMapping("/{carreraId}/asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Asignar asignaturas a una carrera.", description = "Permite a administradores asignar asignaturas a una carrera.")
     public ResponseEntity<Void> asignarAsignaturaACarrera(
             @PathVariable Long carreraId,
             @RequestParam List<Long> asignaturaIds
@@ -104,6 +111,7 @@ public class CarreraController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Actualizar carrera.", description = "Permite a administradores actualizar una carrera existente.")
     public ResponseEntity<Carrera> actualizarCarrera(@RequestBody CarreraUpdateDTO carrera) {
         return new ResponseEntity<>(carreraService.actualizarCarrera(carrera), HttpStatus.OK);
     }
@@ -117,6 +125,7 @@ public class CarreraController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar carrera por id.", description = "Permite a administradores eliminar una carrera.")
     public  ResponseEntity<Carrera> eliminarCarrera(@PathVariable Long id) {
         carreraService.eliminarCarrera(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -132,6 +141,8 @@ public class CarreraController {
      */
     @DeleteMapping("/{id}/asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Eliminar asignaturas de una carrera.", description = "Permite a administradores eliminar asignaturas de una carrera existente.")
+
     public ResponseEntity<Void> removerAsignaturaDeCarrera(
             @PathVariable Long id,
             @RequestParam List<Long> asignaturaIds

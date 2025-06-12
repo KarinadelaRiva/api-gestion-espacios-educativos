@@ -2,6 +2,8 @@ package com.apigestionespacios.apigestionespacios.controller;
 
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.service.SolicitudService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/solicitudes")
+@Tag(name = "Solicitudes", description = "Operaciones relacionadas con las solicitudes.")
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
@@ -23,6 +26,7 @@ public class SolicitudController {
     }
 
 
+    @Operation(summary = "Obtener todas las solicitudes", description = "Devuelve la lista de todas las solicitudes ordenadas por fecha y hora de solicitud descendente.")
     @GetMapping
     public ResponseEntity<List<Solicitud>> getTodas() {
 
@@ -32,6 +36,7 @@ public class SolicitudController {
         return ResponseEntity.ok(solicitudes);
     }
 
+    @Operation(summary = "Obtener solicitud por ID", description = "Devuelve los detalles de una solicitud específica según su ID.")
     @GetMapping("/{id}")
     public ResponseEntity<Solicitud> getPorId(@PathVariable Long id) {
         Solicitud solicitud = solicitudService.obtenerPorId(id);
@@ -40,12 +45,14 @@ public class SolicitudController {
         return ResponseEntity.ok(solicitud);
     }
 
+    @Operation(summary = "Crear nueva solicitud", description = "Crea una nueva solicitud con los datos proporcionados en el cuerpo de la petición.")
     @PostMapping
     public ResponseEntity<Solicitud> crear(@RequestBody Solicitud solicitud) {
         Solicitud nuevaSolicitud = solicitudService.guardar(solicitud);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaSolicitud);
     }
 
+    @Operation(summary = "Eliminar solicitud", description = "Elimina una solicitud existente según su ID.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarSolicitud(@PathVariable Long id) {
         if (!solicitudService.existePorId(id)) {
@@ -55,6 +62,7 @@ public class SolicitudController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Modificar solicitud", description = "Actualiza los datos de una solicitud existente según su ID.")
     @PutMapping("/{id}")
     public ResponseEntity<Solicitud> modificarSolicitud(@PathVariable Long id, @RequestBody Solicitud datosNuevos) {
         Solicitud actualizada = solicitudService.actualizar(id, datosNuevos);
@@ -62,6 +70,7 @@ public class SolicitudController {
         return ResponseEntity.ok(actualizada);
     }
 
+    @Operation(summary = "Buscar solicitudes", description = "Permite buscar solicitudes por ID de usuario y/o estado. Si no se especifican parámetros, devuelve todas las solicitudes.")
     @GetMapping("/buscar")
     public ResponseEntity<List<Solicitud>> buscarSolicitudes(
             @RequestParam(required = false) Long idUsuario,
@@ -83,18 +92,21 @@ public class SolicitudController {
         return ResponseEntity.ok(resultado);
     }
 
+    @Operation(summary = "Aprobar solicitud", description = "Aprueba una solicitud existente según su ID.")
     @PutMapping("/{id}/aprobar")
     public ResponseEntity<Solicitud> aprobarSolicitud(@PathVariable Long id) {
         Solicitud solicitud = solicitudService.aprobar(id);
         return ResponseEntity.ok(solicitud);
     }
 
+    @Operation(summary = "Rechazar solicitud", description = "Rechaza una solicitud existente según su ID y guarda un comentario de rechazo.")
     @PutMapping("/{id}/rechazar")
     public ResponseEntity<Solicitud> rechazarSolicitud(@PathVariable Long id, @RequestBody String comentario) {
         Solicitud solicitud = solicitudService.rechazar(id, comentario);
         return ResponseEntity.ok(solicitud);
     }
 
+    @Operation(summary = "Cancelar solicitud", description = "Cancela una solicitud existente según su ID e ID de usuario.")
     @PutMapping("/{id}/cancelar")
     public ResponseEntity<?> cancelarSolicitud(
             @PathVariable Long id,
@@ -108,7 +120,7 @@ public class SolicitudController {
         }
     }
 
-
+    @Operation(summary = "Solicitar nueva reserva", description = "Permite crear una nueva solicitud de reserva con los datos proporcionados.")
     @PostMapping("/nueva")
     public ResponseEntity<Solicitud> solicitarNuevaReserva(@RequestBody Solicitud solicitud) {
         try {
@@ -119,6 +131,7 @@ public class SolicitudController {
         }
     }
 
+    @Operation(summary = "Solicitar modificación de reserva", description = "Permite solicitar la modificación de una reserva existente proporcionando el ID de la reserva y los nuevos datos.")
     @PostMapping("/modificar/{reservaId}")
     public ResponseEntity<Solicitud> solicitarModificacionReservaPorId(
             @PathVariable Long reservaId,
@@ -132,6 +145,7 @@ public class SolicitudController {
         }
     }
 
+    @Operation(summary = "Obtener solicitudes pendientes paginadas", description = "Devuelve una página de solicitudes pendientes, ordenadas por fecha y hora de solicitud descendente.")
     @GetMapping("/pendientes")
     public ResponseEntity<Page<Solicitud>> obtenerPendientesPaginado(
             @RequestParam(defaultValue = "0") int page,
@@ -147,6 +161,7 @@ public class SolicitudController {
         return ResponseEntity.ok(pendientes);
     }
 
+    @Operation(summary = "Historial de solicitudes de un usuario paginado", description = "Devuelve el historial paginado de solicitudes de un usuario específico.")
     @GetMapping("/usuario/{usuarioId}/historial")
     public ResponseEntity<Page<Solicitud>> historialSolicitudesUsuarioPaginado(
             @PathVariable Long usuarioId,
@@ -160,6 +175,7 @@ public class SolicitudController {
         return ResponseEntity.ok(historial);
     }
 
+    @Operation(summary = "Historial total de solicitudes paginado", description = "Devuelve el historial total paginado de todas las solicitudes registradas.")
     @GetMapping("/historial")
     public ResponseEntity<Page<Solicitud>> historialTotal(
             @RequestParam(defaultValue = "0") int page,
@@ -171,11 +187,4 @@ public class SolicitudController {
         if (historial.isEmpty()) return ResponseEntity.noContent().build();
         return ResponseEntity.ok(historial);
     }
-
-
-
-
-
-
-
 }

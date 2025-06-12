@@ -7,6 +7,8 @@ import com.apigestionespacios.apigestionespacios.dtos.CronogramaComisionDTO;
 import com.apigestionespacios.apigestionespacios.entities.Comision;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.ComisionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comisiones")
+@Tag(name = "Comisiones", description = "Operaciones relacionadas con las comisiones.")
 public class ComisionController {
 
     private final ComisionService comisionService;
@@ -36,6 +39,7 @@ public class ComisionController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtener comisiones.", description = "Permite a administradores obtener un listado de todas las comisiones.")
     public ResponseEntity<List<ComisionResponseDTO>> obtenerComisiones() {
         return new ResponseEntity<>(comisionService.obtenerTodasComisionesDTO(), HttpStatus.OK);
     }
@@ -50,6 +54,7 @@ public class ComisionController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtener comision por id.", description = "Permite a administradores obtener una comisión a través de su id.")
     public ResponseEntity<CronogramaComisionDTO> obtenerComisonPorId(@PathVariable Long id) {
         return new ResponseEntity<>(comisionService.obtenerComisionDTOPorId(id), HttpStatus.OK);
     }
@@ -64,6 +69,7 @@ public class ComisionController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    @Operation(summary = "Crear nueva comisión.", description = "Permite a administradores y profesores crear una nueva comisión.")
     public ResponseEntity<Comision> crearComision(@Valid @RequestBody ComisionCreateDTO comisionCreateDTO) {
         return new ResponseEntity<>(comisionService.crearComisionDesdeDTO(comisionCreateDTO), HttpStatus.CREATED);
     }
@@ -78,6 +84,7 @@ public class ComisionController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
+    @Operation(summary = "Actualizar comision.", description = "Permite a administradores y profesores actualizar una comisión.")
     public ResponseEntity<Comision> actualizarComision(@Valid @RequestBody ComisionUpdateDTO comisionUpdateDTO) {
         return new ResponseEntity<>(comisionService.actualizarComision(comisionUpdateDTO), HttpStatus.OK);
     }
@@ -92,6 +99,7 @@ public class ComisionController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Actualizar comision.", description = "Permite a administradores y profesores actualizar una comisión.")
     public ResponseEntity<Void> eliminarComision(@PathVariable Long id) {
         comisionService.eliminarComision(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -106,6 +114,7 @@ public class ComisionController {
      */
     @GetMapping("/por-asignatura/{asignaturaId}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Obtener comisiones asociadas a asignatura.", description = "Permite a administradores obtener un listado de las comisiones de una asignatura.")
     public ResponseEntity<List<ComisionResponseDTO>> obtenerComisionesPorAsignatura(@PathVariable Long asignaturaId) {
         List<ComisionResponseDTO> comisiones = comisionService.obtenerComisionesPorAsignatura(asignaturaId);
 
@@ -125,6 +134,7 @@ public class ComisionController {
      */
     @GetMapping("/mis-comisiones")
     @PreAuthorize("hasRole('PROFESOR')")
+    @Operation(summary = "Obtener comisiones asociadas al profesor autenticado.", description = "Permite al profesor logueado obtener un listado de las comisiones a su cargo.")
     public ResponseEntity<List<ComisionResponseDTO>> obtenerMisComisiones(Authentication authentication) {
         Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
         Long profesorId = usuarioLogueado.getId(); // extraemos el ID del profesor autenticado

@@ -98,7 +98,7 @@ public class EspacioService {
                 .toList();
     }
 
-    public List<EspacioResponseDTO> obtenerPorCapacidadMinima(Integer capacidad) {
+    public List<EspacioResponseDTO> obtenerPorCapacidadMayorA(Integer capacidad) {
         return espacioRepository.findByCapacidadGreaterThanEqual(capacidad)
                 .stream()
                 .map(EspacioService::espacioToEspacioResponseDTO)
