@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.dtos.cronograma;
 
 import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.util.List;
@@ -13,6 +14,9 @@ import java.util.List;
 @EqualsAndHashCode
 @Builder
 public class CronogramaEspaciosDTO {
+    @Schema(description = "Nombre del espacio físico (aula, laboratorio, etc.)", example = "Aula 101")
     private String nombreEspacio;
+
+    @Schema(description = "Lista de reservas asociadas al espacio")
     private List<ReservaResponseDTO> reservas;
 }

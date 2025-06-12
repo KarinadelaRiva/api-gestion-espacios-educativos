@@ -1,5 +1,6 @@
 package com.apigestionespacios.apigestionespacios.dtos.espacio;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -10,19 +11,24 @@ import lombok.*;
 @Builder
 public class EspacioCreateDTO {
 
+    @Schema(description = "Nombre del espacio físico (aula, laboratorio, etc.)", example = "Aula 101")
     @NotNull(message = "El nombre del espacio no puede ser nulo")
     private String nombre;
 
+    @Schema(description = "Capacidad máxima de personas en el espacio", example = "40")
     @NotNull(message = "La capacidad del espacio no puede ser nula")
     private Integer capacidad;
 
+    @Schema(description = "Indica si el espacio tiene proyector", example = "true")
     private Boolean tieneProyector;
+
+    @Schema(description = "Indica si el espacio tiene TV", example = "false")
     private Boolean tieneTV;
 
-    // Este campo es clave para decidir qué tipo de espacio crear
+    @Schema(description = "Tipo de espacio: 'AULA' o 'LABORATORIO'", example = "AULA")
     @NotNull(message = "El tipo de espacio no puede ser nulo")
     private String tipo; // "AULA" o "LABORATORIO"
 
-    // Solo para laboratorios (puede ser null para aulas)
+    @Schema(description = "Cantidad de computadoras (solo para laboratorios, null para aulas)", example = "20")
     private Integer computadoras;
 }
