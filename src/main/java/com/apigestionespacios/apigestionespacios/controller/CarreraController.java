@@ -1,9 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.CarreraCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.CarreraResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.CarreraUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.carrera.CarreraCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.carrera.CarreraResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.carrera.CarreraUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.service.CarreraService;
 import io.swagger.v3.oas.annotations.Operation;

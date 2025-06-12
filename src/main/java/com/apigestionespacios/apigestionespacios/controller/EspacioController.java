@@ -1,9 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.dtos.EspacioCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.EspacioResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.EspacioUpdateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ReservaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
 import com.apigestionespacios.apigestionespacios.service.EspacioService;
 import io.swagger.v3.oas.annotations.Operation;

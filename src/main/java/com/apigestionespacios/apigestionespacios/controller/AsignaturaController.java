@@ -1,8 +1,8 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.service.AsignaturaService;
 import io.swagger.v3.oas.annotations.Operation;

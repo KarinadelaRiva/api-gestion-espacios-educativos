@@ -1,6 +1,6 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.cronograma;
 
-import com.apigestionespacios.apigestionespacios.entities.Reserva;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
 import lombok.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.espacio;
 
 import lombok.*;
 

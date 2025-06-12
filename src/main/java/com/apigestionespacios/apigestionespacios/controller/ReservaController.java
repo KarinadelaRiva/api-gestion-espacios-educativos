@@ -1,9 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.dtos.CronogramaEspaciosDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ReservaCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ReservaResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ReservaUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.cronograma.CronogramaEspaciosDTO;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.ReservaService;

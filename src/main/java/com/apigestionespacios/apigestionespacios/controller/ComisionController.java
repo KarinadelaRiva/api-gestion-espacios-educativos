@@ -1,9 +1,9 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.dtos.ComisionCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ComisionResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ComisionUpdateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.CronogramaComisionDTO;
+import com.apigestionespacios.apigestionespacios.dtos.comision.ComisionCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.comision.ComisionResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.comision.ComisionUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.cronograma.CronogramaComisionDTO;
 import com.apigestionespacios.apigestionespacios.entities.Comision;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.ComisionService;

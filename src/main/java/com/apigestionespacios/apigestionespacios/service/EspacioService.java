@@ -1,9 +1,9 @@
 package com.apigestionespacios.apigestionespacios.service;
 
-import com.apigestionespacios.apigestionespacios.dtos.EspacioCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.EspacioResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.EspacioUpdateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.ReservaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.espacio.EspacioUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.Aula;
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
 import com.apigestionespacios.apigestionespacios.entities.Laboratorio;

@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.reserva;
 
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;

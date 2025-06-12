@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.reserva;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.validation.constraints.*;
@@ -8,19 +8,13 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
 @Builder
-public class SolicitudCreateDTO {
+public class ReservaUpdateDTO {
 
-    @NotNull(message = "Debe especificar el ID del usuario")
-    private Long usuarioId;
-
-    private Long reservaOriginalId; // puede ser null
-
-    @NotNull(message = "Debe especificar el ID del nuevo espacio")
-    private Long nuevoEspacioId;
+    @NotNull(message = "El ID de la reserva es obligatorio")
+    private Long id;
 
     @NotNull(message = "La fecha de inicio es obligatoria")
     @FutureOrPresent(message = "La fecha de inicio debe ser hoy o en el futuro")
@@ -30,8 +24,7 @@ public class SolicitudCreateDTO {
     @Future(message = "La fecha de fin debe ser en el futuro")
     private LocalDate fechaFin;
 
-    @NotNull(message = "Debe especificar el día de la semana")
-    private DiaSemana diaSemana;
+    private DiaSemana dia;
 
     @NotNull(message = "La hora de inicio es obligatoria")
     private LocalTime horaInicio;
@@ -39,9 +32,15 @@ public class SolicitudCreateDTO {
     @NotNull(message = "La hora de fin es obligatoria")
     private LocalTime horaFin;
 
-    private String comentarioProfesor;
+    @NotNull(message = "Debe especificar un espacio")
+    private Long espacioId;
 
-    @NotNull(message = "Debe especificar la comisión")
-    private Long comisionId;
 
+    // Setter que actualiza el día automáticamente si se modifica la fechaInicio
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+        if (fechaInicio != null) {
+            this.dia = DiaSemana.desdeDayOfWeek(fechaInicio.getDayOfWeek());
+        }
+    }
 }

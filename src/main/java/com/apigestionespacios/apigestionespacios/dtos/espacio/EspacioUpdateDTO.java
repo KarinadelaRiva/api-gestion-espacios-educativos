@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.espacio;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -8,7 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EspacioCreateDTO {
+public class EspacioUpdateDTO {
+
+    @NotNull(message = "El ID del espacio no puede ser nulo")
+    private Long id;
 
     @NotNull(message = "El nombre del espacio no puede ser nulo")
     private String nombre;
@@ -19,10 +22,7 @@ public class EspacioCreateDTO {
     private Boolean tieneProyector;
     private Boolean tieneTV;
 
-    // Este campo es clave para decidir qué tipo de espacio crear
-    @NotNull(message = "El tipo de espacio no puede ser nulo")
-    private String tipo; // "AULA" o "LABORATORIO"
-
     // Solo para laboratorios (puede ser null para aulas)
     private Integer computadoras;
+
 }

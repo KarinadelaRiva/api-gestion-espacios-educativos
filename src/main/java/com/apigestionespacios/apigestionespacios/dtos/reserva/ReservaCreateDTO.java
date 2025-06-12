@@ -1,6 +1,5 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.reserva;
 
-import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -8,13 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Builder
-public class ReservaUpdateDTO {
-
-    @NotNull(message = "El ID de la reserva es obligatorio")
-    private Long id;
+public class ReservaCreateDTO {
 
     @NotNull(message = "La fecha de inicio es obligatoria")
     @FutureOrPresent(message = "La fecha de inicio debe ser hoy o en el futuro")
@@ -23,8 +20,6 @@ public class ReservaUpdateDTO {
     @NotNull(message = "La fecha de fin es obligatoria")
     @Future(message = "La fecha de fin debe ser en el futuro")
     private LocalDate fechaFin;
-
-    private DiaSemana dia;
 
     @NotNull(message = "La hora de inicio es obligatoria")
     private LocalTime horaInicio;
@@ -35,12 +30,7 @@ public class ReservaUpdateDTO {
     @NotNull(message = "Debe especificar un espacio")
     private Long espacioId;
 
-
-    // Setter que actualiza el día automáticamente si se modifica la fechaInicio
-    public void setFechaInicio(LocalDate fechaInicio) {
-        this.fechaInicio = fechaInicio;
-        if (fechaInicio != null) {
-            this.dia = DiaSemana.desdeDayOfWeek(fechaInicio.getDayOfWeek());
-        }
-    }
+    @NotNull(message = "Debe especificar una comisión")
+    private Long comisionId;
 }
+

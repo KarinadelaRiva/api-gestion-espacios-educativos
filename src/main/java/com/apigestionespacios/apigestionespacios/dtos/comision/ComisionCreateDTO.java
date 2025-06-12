@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.comision;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -10,12 +10,12 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class ComisionUpdateDTO {
-    @NotNull(message = "El ID de la comisión no puede ser nulo")
-    private Long id;
-
+public class ComisionCreateDTO {
     @NotNull(message = "El nombre de la comisión no puede ser nulo")
     private String nombre;
+
+    @NotNull(message = "El ID de la asignatura no puede ser nulo")
+    private Long asignaturaId;
 
     @NotNull(message = "El ID de la carrera no puede ser nulo")
     private Long carreraId;
@@ -27,4 +27,5 @@ public class ComisionUpdateDTO {
     @Min(value = 1, message = "La cantidad de alumnos debe ser al menos 1")
     @Max(value = 100, message = "La cantidad de alumnos no puede ser mayor a 100")
     private Integer cantidadAlumnos;
+
 }

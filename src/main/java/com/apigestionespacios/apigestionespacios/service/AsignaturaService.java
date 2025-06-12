@@ -1,10 +1,9 @@
 package com.apigestionespacios.apigestionespacios.service;
 
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaResponseDTO;
-import com.apigestionespacios.apigestionespacios.dtos.AsignaturaUpdateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
-import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.AsignaturaRepository;

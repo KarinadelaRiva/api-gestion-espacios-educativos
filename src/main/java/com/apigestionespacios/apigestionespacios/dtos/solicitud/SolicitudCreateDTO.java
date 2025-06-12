@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.solicitud;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import jakarta.validation.constraints.*;
@@ -8,16 +8,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 @ToString
-public class SolicitudUpdateDTO {
+@Builder
+public class SolicitudCreateDTO {
 
-    @NotNull(message = "El ID de la solicitud es obligatorio")
-    private Long id;
+    @NotNull(message = "Debe especificar el ID del usuario")
+    private Long usuarioId;
 
-    @NotNull(message = "Debe especificar un nuevo espacio")
+    private Long reservaOriginalId; // puede ser null
+
+    @NotNull(message = "Debe especificar el ID del nuevo espacio")
     private Long nuevoEspacioId;
 
     @NotNull(message = "La fecha de inicio es obligatoria")
@@ -39,7 +41,7 @@ public class SolicitudUpdateDTO {
 
     private String comentarioProfesor;
 
-    @NotNull(message = "Debe especificar una comisión")
+    @NotNull(message = "Debe especificar la comisión")
     private Long comisionId;
 
 }

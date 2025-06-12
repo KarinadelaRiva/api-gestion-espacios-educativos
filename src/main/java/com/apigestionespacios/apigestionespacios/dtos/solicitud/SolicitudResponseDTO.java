@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.dtos;
+package com.apigestionespacios.apigestionespacios.dtos.solicitud;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
