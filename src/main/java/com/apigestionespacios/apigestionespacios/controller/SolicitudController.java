@@ -5,6 +5,7 @@ import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudRespons
 import com.apigestionespacios.apigestionespacios.dtos.usuario.UsuarioResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
+import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
 import com.apigestionespacios.apigestionespacios.service.SolicitudService;
 import com.apigestionespacios.apigestionespacios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,7 +96,7 @@ public class SolicitudController {
             @Parameter(description = "ID del usuario solicitante", example = "5")
             @RequestParam(required = false) Long idUsuario,
             @Parameter(description = "Estado de la solicitud (PENDIENTE, APROBADA, RECHAZADA, CANCELADA)", example = "PENDIENTE")
-            @RequestParam(required = false) String estado) {
+            @RequestParam(required = false) EstadoSolicitud estado) {
 
         List<SolicitudResponseDTO> resultado;
 

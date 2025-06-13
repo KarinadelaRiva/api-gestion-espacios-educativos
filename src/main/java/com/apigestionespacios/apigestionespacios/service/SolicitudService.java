@@ -328,7 +328,7 @@ public class SolicitudService {
      * @param estado el estado de las solicitudes a buscar.
      * @return lista de SolicitudResponseDTO con ese estado.
      */
-    public List<SolicitudResponseDTO> obtenerPorEstadoDTO(String estado) {
+    public List<SolicitudResponseDTO> obtenerPorEstadoDTO(EstadoSolicitud estado) {
         return solicitudRepository.findByEstado(estado).stream()
                 .map(this::solicitudToSolicitudResponseDTO)
                 .toList();
@@ -352,7 +352,7 @@ public class SolicitudService {
      * @param usuarioId el ID del usuario.
      * @return lista de SolicitudResponseDTO filtradas por estado y usuario.
      */
-    public List<SolicitudResponseDTO> obtenerPorEstadoYUsuarioDTO(String estado, Long usuarioId) {
+    public List<SolicitudResponseDTO> obtenerPorEstadoYUsuarioDTO(EstadoSolicitud estado, Long usuarioId) {
         return solicitudRepository.findByEstadoAndUsuarioId(estado, usuarioId).stream()
                 .map(this::solicitudToSolicitudResponseDTO)
                 .toList();

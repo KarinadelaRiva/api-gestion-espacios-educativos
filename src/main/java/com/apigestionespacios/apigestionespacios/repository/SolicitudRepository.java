@@ -19,10 +19,10 @@ public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
     Page<Solicitud> findByUsuarioId(Long usuarioId, Pageable pageable);
 
 
-    List<Solicitud> findByEstado(String estado);
+    List<Solicitud> findByEstado(EstadoSolicitud estado);
     Page<Solicitud> findByEstado(EstadoSolicitud estado, Pageable pageable);
 
-    List<Solicitud> findByEstadoAndUsuarioId(String estado, Long usuarioId);
+    List<Solicitud> findByEstadoAndUsuarioId(EstadoSolicitud estado, Long usuarioId);
 
     List<Solicitud> findAllByOrderByFechaHoraSolicitudDesc();
 }
