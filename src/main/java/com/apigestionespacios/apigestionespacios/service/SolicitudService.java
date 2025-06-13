@@ -195,7 +195,7 @@ public class SolicitudService {
      * @return DTO con los datos de la solicitud creada
      * @throws IllegalArgumentException si no se encuentra la reserva original o si no se especifica el ID de la reserva original
      */
-    public Solicitud solicitarModificacionPorIdReservaDTO(SolicitudCreateDTO dto) {
+    public Solicitud solicitarModificacionPorIdReservaDTO(Long idSolicitante, SolicitudCreateDTO dto) {
         Reserva reservaOriginal = reservaService.obtenerReserva(dto.getReservaOriginalId());
         Espacio espacioSolicitado = espacioService.obtenerPorId(dto.getNuevoEspacioId());
         Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
@@ -224,6 +224,8 @@ public class SolicitudService {
         if (dto.getHoraFin().isBefore(dto.getHoraInicio())) {
             throw new EntityValidationException("La hora de fin no puede ser anterior a la de inicio.");
         }
+
+        dto.setUsuarioId(idSolicitante);
 
         Solicitud solicitud = solicitudDTOtoSolicitud(dto);
 

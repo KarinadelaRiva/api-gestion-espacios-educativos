@@ -168,9 +168,14 @@ public class SolicitudController {
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<Solicitud> solicitarModificacionReservaPorId(
             @Parameter(description = "Datos de la nueva solicitud de modificación", required = true)
-            @Valid @RequestBody SolicitudCreateDTO datosNuevos ) {
+            @Valid @RequestBody SolicitudCreateDTO datosNuevos,
+            Authentication authentication) {
+
+        String usuarioLogueado = authentication.getName();
+        Long solicitanteId = usuarioService.obtenerPorUsername(usuarioLogueado).getId();
+
         try {
-            Solicitud solicitud = solicitudService.solicitarModificacionPorIdReservaDTO(datosNuevos);
+            Solicitud solicitud = solicitudService.solicitarModificacionPorIdReservaDTO(solicitanteId, datosNuevos);
             return ResponseEntity.status(HttpStatus.CREATED).body(solicitud);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
