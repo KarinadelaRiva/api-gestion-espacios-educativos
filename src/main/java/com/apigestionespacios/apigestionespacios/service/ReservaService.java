@@ -10,11 +10,14 @@ import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationExce
 import com.apigestionespacios.apigestionespacios.exceptions.ReservaSolapadaException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
 import com.apigestionespacios.apigestionespacios.repository.ReservaRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -183,11 +186,18 @@ public class ReservaService {
      * @param id ID de la reserva a eliminar.
      * @throws ResourceNotFoundException si no se encuentra la reserva.
      */
+    @Transactional
     public void eliminarReserva(Long id) {
-        if (reservaRepository.existsById(id)) {
+        if (!reservaRepository.existsById(id)) {
+            throw new EntityNotFoundException("Reserva con ID " + id + " no encontrada");
+        }
+
+        try {
             reservaRepository.deleteById(id);
-        } else {
-            throw new ResourceNotFoundException("Reserva con ID " + id + " no encontrada.");
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalStateException("No se puede eliminar la reserva. Tiene dependencias activas.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar la reserva: " + e.getMessage(), e);
         }
     }
 

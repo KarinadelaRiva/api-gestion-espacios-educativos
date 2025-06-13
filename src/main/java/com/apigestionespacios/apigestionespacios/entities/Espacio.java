@@ -48,6 +48,7 @@ public abstract class Espacio {
     @OneToMany(
             mappedBy = "espacio", // Nombre de la propiedad en la clase Reserva que hace referencia a Aula
             cascade = CascadeType.ALL, // Permite que se eliminen las reservas asociadas a el aula si se elimina el aula
+            orphanRemoval = true,
             fetch = FetchType.EAGER // Cuando se carga el aula, se cargan todas las reservas asociadas a el aula
     )
     @JsonManagedReference

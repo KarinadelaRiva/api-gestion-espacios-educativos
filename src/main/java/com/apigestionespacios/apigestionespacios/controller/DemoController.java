@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.JWT.controller;
+package com.apigestionespacios.apigestionespacios.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

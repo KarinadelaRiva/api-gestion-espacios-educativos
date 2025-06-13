@@ -1,6 +1,7 @@
-package com.apigestionespacios.apigestionespacios.JWT.config;
+package com.apigestionespacios.apigestionespacios.config;
 
-import com.apigestionespacios.apigestionespacios.JWT.entity.UserDetailsServicesImplementation;
+import com.apigestionespacios.apigestionespacios.security.jwt.JwtAuthFilter;
+import com.apigestionespacios.apigestionespacios.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final String[] rutasSinRestriccion = {"/auth/login", "/reservas/cronograma-por-dia", "/reservas/cronograma"};
+    private final String[] rutasSinRestriccion = {"http://localhost:8080/swagger-ui.html","/auth/login", "/reservas/cronograma-por-dia", "/reservas/cronograma"};
     private final String[] rutasSinRestriccionPOST = {"/usuarios"};
 
     // Bean para codificar y verificar contraseñas con BCrypt
@@ -36,7 +38,7 @@ public class SecurityConfig {
 
     // Proveedor de autenticación que conecta al servicio de usuarios y al codificador
     @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsServicesImplementation userDetailsService) {
+    public AuthenticationProvider authenticationProvider(UsuarioService userDetailsService) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -54,16 +56,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain2(HttpSecurity http,
                                                     JwtAuthFilter jwtAuthFilter,
-                                                    UserDetailsServicesImplementation userDetailsService) throws Exception {
+                                                    AuthenticationProvider authenticationProvider
+                                                    ) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(rutasSinRestriccion).permitAll()
                         .requestMatchers(HttpMethod.POST, rutasSinRestriccionPOST).permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .authenticationProvider(authenticationProvider(userDetailsService))
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

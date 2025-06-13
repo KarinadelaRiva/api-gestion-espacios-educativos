@@ -68,7 +68,7 @@ public class UsuarioController {
             summary = "Crear usuario",
             description = "Crea un nuevo usuario con los datos proporcionados en el cuerpo de la petición.")
     @PostMapping
-    @PreAuthorize("hasRol('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Usuario> crearUsuario(
             @Parameter(description = "Datos del usuario a crear", required = true)
             @Valid @RequestBody UsuarioCreateDTO usuario) {

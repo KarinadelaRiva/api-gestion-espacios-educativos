@@ -1,9 +1,9 @@
-package com.apigestionespacios.apigestionespacios.JWT.controller;
+package com.apigestionespacios.apigestionespacios.controller;
 
-import com.apigestionespacios.apigestionespacios.JWT.dto.LoginRequest;
-import com.apigestionespacios.apigestionespacios.JWT.dto.LoginResponse;
-import com.apigestionespacios.apigestionespacios.JWT.service.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.apigestionespacios.apigestionespacios.security.jwt.dto.LoginRequest;
+import com.apigestionespacios.apigestionespacios.security.jwt.dto.LoginResponse;
+import com.apigestionespacios.apigestionespacios.security.jwt.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,19 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {

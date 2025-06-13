@@ -7,9 +7,11 @@ import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.entities.enums.Rol;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
-import com.apigestionespacios.apigestionespacios.exceptions.RolNoValidoException;
 import com.apigestionespacios.apigestionespacios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import java.util.List;
 import static com.apigestionespacios.apigestionespacios.dtos.usuario.UsuarioCreateDTO.parseOrThrow;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -187,6 +189,13 @@ public class UsuarioService {
         Usuario actualizado = usuarioRepository.save(usuario);
 
         return usuarioToUsuarioResponseDTO(actualizado);
+    }
+
+    @Override
+    public Usuario loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        return usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con username: " + username));
     }
 
 }

@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.JWT.dto;
+package com.apigestionespacios.apigestionespacios.security.jwt.dto;
 
 public class LoginRequest {
     private String username;

@@ -1,4 +1,4 @@
-package com.apigestionespacios.apigestionespacios.JWT.service;
+package com.apigestionespacios.apigestionespacios.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

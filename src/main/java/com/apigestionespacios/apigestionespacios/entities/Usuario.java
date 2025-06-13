@@ -6,8 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Builder
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -60,11 +62,9 @@ public class Usuario {
     @JsonIgnore
     private List<Comision> comisiones;
 
-    public Set<? extends GrantedAuthority> getRoles() {
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + rol.name()));
-
-    /*public Set<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(rol); */
-
     }
 } 
