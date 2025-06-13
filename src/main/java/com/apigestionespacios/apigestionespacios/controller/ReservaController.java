@@ -7,6 +7,7 @@ import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.ReservaService;
+import com.apigestionespacios.apigestionespacios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,10 +37,12 @@ import java.util.stream.Collectors;
 public class ReservaController {
 
     private final ReservaService reservaService;
+    private final UsuarioService usuarioService;
 
     @Autowired
-    public ReservaController(ReservaService reservaService) {
+    public ReservaController(ReservaService reservaService, UsuarioService usuarioService) {
         this.reservaService = reservaService;
+        this.usuarioService = usuarioService;
     }
 
     @Operation(
@@ -138,8 +141,8 @@ public class ReservaController {
     @PreAuthorize("hasRole('PROFESOR')")
     @GetMapping("/mis-reservas")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerMiHistorialReservas(Authentication authentication) {
-        Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
-        Long profesorId = usuarioLogueado.getId();
+        String usuarioLogueado = authentication.getName();
+        Long profesorId = usuarioService.obtenerPorUsername(usuarioLogueado).getId();
 
         List<ReservaResponseDTO> reservas = reservaService.obtenerReservasPorProfesor(profesorId);
 
@@ -156,8 +159,8 @@ public class ReservaController {
     @PreAuthorize("hasRole('PROFESOR')")
     @GetMapping("/mis-reservas/vigentes")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerMisReservasVigentes(Authentication authentication) {
-        Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
-        Long profesorId = usuarioLogueado.getId();
+        String usuarioLogueado = authentication.getName();
+        Long profesorId = usuarioService.obtenerPorUsername(usuarioLogueado).getId();
 
         List<ReservaResponseDTO> reservas = reservaService.obtenerReservasVigentesPorProfesor(profesorId);
 
