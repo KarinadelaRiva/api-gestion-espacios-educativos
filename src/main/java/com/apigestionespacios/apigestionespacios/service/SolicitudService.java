@@ -74,15 +74,7 @@ public class SolicitudService {
      * @return el DTO SolicitudResponseDTO con los datos mapeados de la entidad.
      */
     public SolicitudResponseDTO solicitudToSolicitudResponseDTO(Solicitud solicitud) {
-        SolicitudResponseDTO.SolicitudResponseDTOBuilder builderSolicitud = SolicitudResponseDTO.builder();
-
-        if (solicitud.getReservaOriginal() != null) {
-            builderSolicitud.reservaOriginalId(solicitud.getReservaOriginal().getId());
-        } else {
-            builderSolicitud.reservaOriginalId(null);
-        }
-
-        return SolicitudResponseDTO.builder()
+        SolicitudResponseDTO.SolicitudResponseDTOBuilder builder = SolicitudResponseDTO.builder()
                 .id(solicitud.getId())
                 .nombreUsuario(solicitud.getUsuario().getNombre())
                 .nombreNuevoEspacio(solicitud.getNuevoEspacio().getNombre())
@@ -97,8 +89,15 @@ public class SolicitudService {
                 .fechaHoraSolicitud(solicitud.getFechaHoraSolicitud())
                 .nombreComision(solicitud.getComision().getNombre())
                 .nombreAsignatura(solicitud.getComision().getAsignatura().getNombre())
-                .nombreDocente(solicitud.getComision().getProfesor().getNombre() + " " + solicitud.getComision().getProfesor().getApellido())
-                .build();
+                .nombreDocente(solicitud.getComision().getProfesor().getNombre() + " " + solicitud.getComision().getProfesor().getApellido());
+
+        if (solicitud.getReservaOriginal() != null) {
+            builder.reservaOriginalId(solicitud.getReservaOriginal().getId());
+        } else {
+            builder.reservaOriginalId(null);
+        }
+
+        return builder.build();
     }
 
     /**
