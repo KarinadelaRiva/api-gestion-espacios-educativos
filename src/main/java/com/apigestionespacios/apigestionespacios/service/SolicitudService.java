@@ -74,10 +74,17 @@ public class SolicitudService {
      * @return el DTO SolicitudResponseDTO con los datos mapeados de la entidad.
      */
     public SolicitudResponseDTO solicitudToSolicitudResponseDTO(Solicitud solicitud) {
+        SolicitudResponseDTO.SolicitudResponseDTOBuilder builderSolicitud = SolicitudResponseDTO.builder();
+
+        if (solicitud.getReservaOriginal() != null) {
+            builderSolicitud.reservaOriginalId(solicitud.getReservaOriginal().getId());
+        } else {
+            builderSolicitud.reservaOriginalId(null);
+        }
+
         return SolicitudResponseDTO.builder()
                 .id(solicitud.getId())
                 .nombreUsuario(solicitud.getUsuario().getNombre())
-                .reservaOriginalId(solicitud.getReservaOriginal().getId())
                 .nombreNuevoEspacio(solicitud.getNuevoEspacio().getNombre())
                 .estado(solicitud.getEstado())
                 .fechaInicio(solicitud.getFechaInicio())
@@ -334,7 +341,7 @@ public class SolicitudService {
      * @return página de SolicitudResponseDTO con solicitudes pendientes.
      */
     public Page<SolicitudResponseDTO> obtenerSolicitudesPendientesDTO(Pageable pageable) {
-        return solicitudRepository.findByEstado("PENDIENTE", pageable)
+        return solicitudRepository.findByEstado(EstadoSolicitud.PENDIENTE, pageable)
                 .map(this::solicitudToSolicitudResponseDTO);
     }
 

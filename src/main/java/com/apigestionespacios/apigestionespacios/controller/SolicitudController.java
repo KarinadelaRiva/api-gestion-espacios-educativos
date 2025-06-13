@@ -2,13 +2,16 @@ package com.apigestionespacios.apigestionespacios.controller;
 
 import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudCreateDTO;
 import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.usuario.UsuarioResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.SolicitudService;
+import com.apigestionespacios.apigestionespacios.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +30,11 @@ import java.util.List;
 public class SolicitudController {
 
     private final SolicitudService solicitudService;
+    private final UsuarioService usuarioService;
 
-    public SolicitudController(SolicitudService solicitudService) {
+    public SolicitudController(SolicitudService solicitudService, UsuarioService usuarioService) {
         this.solicitudService = solicitudService;
+        this.usuarioService = usuarioService;
     }
 
 
@@ -72,10 +77,9 @@ public class SolicitudController {
             @PathVariable Long id,
             Authentication authentication ) {
 
-        Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
-        Long profesorId = usuarioLogueado.getId();
-
-        SolicitudResponseDTO cancelada = solicitudService.cancelarSolicitud(id , profesorId);
+        String username = authentication.getName();
+        UsuarioResponseDTO usuario = usuarioService.obtenerPorUsername(username);
+        SolicitudResponseDTO cancelada = solicitudService.cancelarSolicitud(id , usuario.getId());
 
         if (cancelada == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(cancelada);
@@ -129,7 +133,7 @@ public class SolicitudController {
             @Parameter(description = "ID de la solicitud a rechazar", example = "1")
             @PathVariable Long id,
             @Parameter(description = "Comentario del rechazo", example = "No se cumplen los requisitos")
-            @RequestBody String comentario) {
+            @RequestBody(required = false) String comentario) {
         Solicitud solicitud = solicitudService.rechazar(id, comentario);
         return ResponseEntity.ok(solicitud);
     }
