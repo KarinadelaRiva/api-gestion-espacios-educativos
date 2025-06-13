@@ -7,6 +7,7 @@ import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.entities.enums.Rol;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceConflictException;
 import com.apigestionespacios.apigestionespacios.exceptions.ResourceNotFoundException;
+import com.apigestionespacios.apigestionespacios.exceptions.RolNoValidoException;
 import com.apigestionespacios.apigestionespacios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,14 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.apigestionespacios.apigestionespacios.dtos.usuario.UsuarioCreateDTO.parseOrThrow;
+
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-
-    /* @Autowired
-    private PasswordEncoder passwordEncoder; */
 
     @Autowired
     public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
@@ -36,7 +36,7 @@ public class UsuarioService {
                 .apellido(dto.getApellido())
                 .username(dto.getUsername())
                 .password(passwordEncoder.encode(dto.getPassword()))
-                .rol(dto.getRol())
+                .rol(parseOrThrow(dto.getRol().toString()))
                 .build();
     }
 
@@ -49,10 +49,6 @@ public class UsuarioService {
                 .rol(usuario.getRol())
                 .build();
     }
-
-    /*public List<Usuario> obtenerTodos() {
-        return usuarioRepository.findAll();
-    }*/
 
     /**
      * Obtiene todos los usuarios y los convierte a DTOs de respuesta.
@@ -84,11 +80,6 @@ public class UsuarioService {
         return usuarioToUsuarioResponseDTO(usuario);
     }
 
-    public Usuario obtenerPorUsername(String username) {
-        return usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con username: " + username));
-    }
-
     /**
      * Obtiene un usuario por su username y lo convierte a DTO de respuesta.
      *
@@ -102,19 +93,6 @@ public class UsuarioService {
         return usuarioToUsuarioResponseDTO(usuario);
     }
 
-    public Usuario guardar(Usuario usuario) {
-        if (usuarioRepository.existsByUsername(usuario.getUsername())) {
-            throw new ResourceConflictException("Ya existe un usuario con el mismo username");
-        }
-
-//        if (!rolRepository.existsById(usuario.getRol().getId())) {
-//            throw new RuntimeException("El rol especificado no existe");
-//        }
-
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        return usuarioRepository.save(usuario);
-    }
-
     /**
      * Guarda un nuevo usuario a partir de un DTO de creación.
      *
@@ -122,79 +100,71 @@ public class UsuarioService {
      * @return UsuarioResponseDTO con los datos del usuario guardado.
      * @throws ResourceConflictException si ya existe un usuario con el mismo username.
      */
-    public UsuarioResponseDTO guardarDTO(UsuarioCreateDTO dto) {
+    public Usuario crearUsuario(UsuarioCreateDTO dto) {
         if (usuarioRepository.existsByUsername(dto.getUsername())) {
             throw new ResourceConflictException("Ya existe un usuario con el mismo username");
         }
 
         Usuario usuario = usuarioCreateDTOtoUsuario(dto);
-        Usuario usuarioGuardado = usuarioRepository.save(usuario);
-        return usuarioToUsuarioResponseDTO(usuarioGuardado);
-    }
 
-    public Usuario actualizar(Long id, Usuario actualizado) {
-        Usuario existente = obtenerPorId(id);
-
-        if (!existente.getUsername().equals(actualizado.getUsername()) &&
-                usuarioRepository.existsByUsername(actualizado.getUsername())) {
-            throw new ResourceConflictException("El username ya está en uso por otro usuario");
-        }
-
-        existente.setNombre(actualizado.getNombre());
-        existente.setApellido(actualizado.getApellido());
-        existente.setUsername(actualizado.getUsername());
-        existente.setPassword(actualizado.getPassword());
-
-//        if (!rolRepository.existsById(actualizado.getRol().getId())) {
-//            throw new RuntimeException("El rol especificado no existe");
-//        }
-
-        existente.setRol(actualizado.getRol());
-
-        return usuarioRepository.save(existente);
+        return usuarioRepository.save(usuario);
     }
 
     /**
-     * Actualiza un usuario existente a partir de un DTO de actualización.
-     *
-     * @param dto DTO con los datos para actualizar un usuario.
-     * @return UsuarioResponseDTO con los datos del usuario actualizado.
-     * @throws ResourceConflictException si el nuevo username ya está en uso por otro usuario.
-     * @throws ResourceNotFoundException si no existe el usuario con el ID especificado.
-     */
-    public UsuarioResponseDTO actualizarDTO(UsuarioUpdateDTO dto) {
-        Usuario existente = obtenerPorId(dto.getId());
+        * Actualiza un usuario existente a partir de un DTO de actualización.
+        *
+        * @param id  ID del usuario a actualizar.
+        * @param dto DTO con los datos para actualizar el usuario.
+        * @return UsuarioResponseDTO con los datos del usuario actualizado.
+        * @throws ResourceNotFoundException si no existe el usuario con ese ID.
+        * @throws ResourceConflictException  si el nuevo username ya está en uso por otro usuario.
+        */
+    public UsuarioResponseDTO actualizarUsuario(Long id, UsuarioUpdateDTO dto) {
+        Usuario existente = obtenerPorId(id);
 
-        if (!existente.getUsername().equals(dto.getUsername()) &&
+        // Validar identidad
+        if (!existente.getUsername().equals(dto.getCurrentUsername())) {
+            throw new RuntimeException("El nombre de usuario actual no coincide");
+        }
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), existente.getPassword())) {
+            throw new RuntimeException("La contraseña actual es incorrecta");
+        }
+
+        // Validar nuevo username si cambia
+        if (dto.getUsername() != null && !dto.getUsername().isBlank() &&
+                !dto.getUsername().equals(existente.getUsername()) &&
                 usuarioRepository.existsByUsername(dto.getUsername())) {
             throw new ResourceConflictException("El username ya está en uso por otro usuario");
         }
 
-        existente.setNombre(dto.getNombre());
-        existente.setApellido(dto.getApellido());
-        existente.setUsername(dto.getUsername());
-
-        // Si la contraseña viene y no está vacía, la codificamos y actualizamos
+        // Actualizar solo campos no nulos
+        if (dto.getNombre() != null && !dto.getNombre().isBlank()) {
+            existente.setNombre(dto.getNombre());
+        }
+        if (dto.getApellido() != null && !dto.getApellido().isBlank()) {
+            existente.setApellido(dto.getApellido());
+        }
+        if (dto.getUsername() != null && !dto.getUsername().isBlank()) {
+            existente.setUsername(dto.getUsername());
+        }
         if (dto.getPassword() != null && !dto.getPassword().isBlank()) {
             existente.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
-        existente.setRol(dto.getRol());
-
-        Usuario actualizado = usuarioRepository.save(existente);
-
-        return usuarioToUsuarioResponseDTO(actualizado);
+        Usuario guardado = usuarioRepository.save(existente);
+        return usuarioToUsuarioResponseDTO(guardado);
     }
+
 
     public void eliminar(Long id) {
         if (!usuarioRepository.existsById(id)) {
             throw new ResourceNotFoundException("Usuario no encontrado");
         }
-        usuarioRepository.deleteById(id);
-    }
 
-    public List<Usuario> obtenerPorRol(Rol rol) {
-        return usuarioRepository.findByRol(rol);
+        if(obtenerPorId(id).getRol() == Rol.ADMIN) {
+            throw new ResourceConflictException("No se puede eliminar un usuario con rol ADMIN");
+        }
+        usuarioRepository.deleteById(id);
     }
 
     /**
@@ -208,6 +178,15 @@ public class UsuarioService {
         return usuarios.stream()
                 .map(this::usuarioToUsuarioResponseDTO)
                 .toList();
+    }
+
+    public UsuarioResponseDTO modificarRolUsuario(Long id, String nuevoRol) {
+        Usuario usuario = obtenerPorId(id);
+
+        usuario.setRol(parseOrThrow(nuevoRol));
+        Usuario actualizado = usuarioRepository.save(usuario);
+
+        return usuarioToUsuarioResponseDTO(actualizado);
     }
 
 }

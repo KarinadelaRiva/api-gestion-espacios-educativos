@@ -60,13 +60,6 @@ public class Usuario {
     @JsonIgnore
     private List<Comision> comisiones;
 
-    @Column(
-            nullable = false,
-            length = 20
-    )
-   /* @Enumerated(EnumType.STRING)
-    private Rol rol; */
-
     public Set<? extends GrantedAuthority> getRoles() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + rol.name()));
 

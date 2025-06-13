@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.dtos.usuario;
 
 import com.apigestionespacios.apigestionespacios.entities.enums.Rol;
+import com.apigestionespacios.apigestionespacios.exceptions.RolNoValidoException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -35,5 +36,13 @@ public class UsuarioCreateDTO {
     @Schema(description = "Rol asignado al usuario", example = "PROFESOR")
     @NotNull(message = "El rol es obligatorio")
     private Rol rol;
+
+    public static Rol parseOrThrow(String rolStr) {
+        try {
+            return Rol.valueOf(rolStr.toUpperCase());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new RolNoValidoException("Debe especificar un rol válido: " + rolStr);
+        }
+    }
 
 }
