@@ -15,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/asignaturas")
@@ -127,10 +129,15 @@ public class AsignaturaController {
     @Operation(
             summary = "Elimina una asignatura por su ID.",
             description = "Permite a administradores eliminar asignaturas del sistema.")
-    public ResponseEntity<Void> eliminarAsignatura(
+    public ResponseEntity<Map<String, String>> eliminarAsignatura(
             @Parameter(description = "ID de la asignatura a eliminar", example = "1")
             @PathVariable Long id) {
+
         asignaturaService.eliminarAsignatura(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Asignatura eliminada correctamente");
+
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 }

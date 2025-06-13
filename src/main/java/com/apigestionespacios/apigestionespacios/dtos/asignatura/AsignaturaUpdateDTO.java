@@ -16,7 +16,6 @@ public class AsignaturaUpdateDTO {
     private Long id;
 
     @Schema(description = "Nombre de la asignatura", example = "Matemática I")
-    @NotNull(message = "El nombre de la asignatura es obligatorio")
     private String nombre;
 
     @Schema(description = "Indica si la asignatura requiere laboratorio", example = "true")

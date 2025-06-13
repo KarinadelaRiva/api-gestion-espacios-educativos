@@ -116,8 +116,13 @@ public class AsignaturaService {
     public Asignatura actualizarAsignatura(AsignaturaUpdateDTO nueva) {
         Asignatura existente = obtenerPorId(nueva.getId());
 
-        existente.setNombre(nueva.getNombre());
-        existente.setRequiereLaboratorio(nueva.getRequiereLaboratorio());
+        if (nueva.getNombre() != null && !nueva.getNombre().equals(existente.getNombre())) {
+            existente.setNombre(nueva.getNombre());
+        }
+
+        if (nueva.getRequiereLaboratorio() != null && !nueva.getRequiereLaboratorio().equals(existente.getRequiereLaboratorio())) {
+            existente.setRequiereLaboratorio(nueva.getRequiereLaboratorio());
+        }
 
         return asignaturaRepository.save(existente);
     }
