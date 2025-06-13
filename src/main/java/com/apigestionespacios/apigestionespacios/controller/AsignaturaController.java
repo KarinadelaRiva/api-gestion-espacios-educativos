@@ -6,6 +6,7 @@ import com.apigestionespacios.apigestionespacios.dtos.asignatura.AsignaturaUpdat
 import com.apigestionespacios.apigestionespacios.entities.Asignatura;
 import com.apigestionespacios.apigestionespacios.service.AsignaturaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class AsignaturaController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener todas las asignaturas.", description = "Devuelve una lista de todas las asignaturas en el sistema.")
+    @Operation(
+            summary = "Obtener todas las asignaturas.",
+            description = "Devuelve una lista de todas las asignaturas en el sistema.")
     public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturas() {
         return new ResponseEntity<>(asignaturaService.obtenerTodasAsignaturasDTO(), HttpStatus.OK);
     }
@@ -49,8 +52,12 @@ public class AsignaturaController {
      */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener asignatura por ID.", description = "Devuelve un DTO con la asignatura con ID coincidente.")
-    public ResponseEntity<AsignaturaResponseDTO> obtenerAsignaturaPorId(@PathVariable Long id) {
+    @Operation(
+            summary = "Obtener asignatura por ID.", description =
+            "Devuelve un DTO con la asignatura con ID coincidente.")
+    public ResponseEntity<AsignaturaResponseDTO> obtenerAsignaturaPorId(
+            @Parameter(description = "ID de la asignatura a buscar", example = "1")
+            @PathVariable Long id) {
         return new ResponseEntity<>(asignaturaService.obtenerDTOPorId(id), HttpStatus.OK);
     }
 
@@ -63,8 +70,12 @@ public class AsignaturaController {
      */
     @GetMapping("/codigo/{codigo}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener asignatura por ID.", description = "Devuelve un DTO con la asignatura con código coincidente.")
-    public ResponseEntity<AsignaturaResponseDTO> obtenerAsignaturaPorCodigo(@PathVariable Integer codigo) {
+    @Operation(
+            summary = "Obtener asignatura por ID.",
+            description = "Devuelve un DTO con la asignatura con código coincidente.")
+    public ResponseEntity<AsignaturaResponseDTO> obtenerAsignaturaPorCodigo(
+            @Parameter(description = "Código de la asignatura a buscar", example = "1001")
+            @PathVariable Integer codigo) {
         return new ResponseEntity<>(asignaturaService.obtenerPorCodigo(codigo), HttpStatus.OK);
     }
 
@@ -77,8 +88,12 @@ public class AsignaturaController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Crea una nueva asignatura.", description = "Crea una nueva asignatura a partir de un DTO.")
-    public ResponseEntity<Asignatura> crearAsignatura(@Valid @RequestBody AsignaturaCreateDTO dto) {
+    @Operation(
+            summary = "Crea una nueva asignatura.",
+            description = "Crea una nueva asignatura a partir de un DTO.")
+    public ResponseEntity<Asignatura> crearAsignatura(
+            @Parameter(description = "DTO de creación de asignatura", required = true)
+            @Valid @RequestBody AsignaturaCreateDTO dto) {
         return new ResponseEntity<>(asignaturaService.crearAsignaturaDesdeDTO(dto), HttpStatus.CREATED);
     }
 
@@ -91,8 +106,12 @@ public class AsignaturaController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Actualiza una asignatura existente.", description = "Permite a administradores actualizar los datos de una asignatura específica.")
-    public ResponseEntity<Asignatura> actualizarAsignatura(@Valid @RequestBody AsignaturaUpdateDTO dto) {
+    @Operation(
+            summary = "Actualiza una asignatura existente.",
+            description = "Permite a administradores actualizar los datos de una asignatura específica.")
+    public ResponseEntity<Asignatura> actualizarAsignatura(
+            @Parameter(description = "DTO de actualización de asignatura", required = true)
+            @Valid @RequestBody AsignaturaUpdateDTO dto) {
         return new ResponseEntity<>(asignaturaService.actualizarAsignatura(dto), HttpStatus.OK);
     }
 
@@ -105,8 +124,12 @@ public class AsignaturaController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Elimina una asignatura por su ID.", description = "Permite a administradores eliminar asignaturas del sistema.")
-    public ResponseEntity<Void> eliminarAsignatura(@PathVariable Long id) {
+    @Operation(
+            summary = "Elimina una asignatura por su ID.",
+            description = "Permite a administradores eliminar asignaturas del sistema.")
+    public ResponseEntity<Void> eliminarAsignatura(
+            @Parameter(description = "ID de la asignatura a eliminar", example = "1")
+            @PathVariable Long id) {
         asignaturaService.eliminarAsignatura(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

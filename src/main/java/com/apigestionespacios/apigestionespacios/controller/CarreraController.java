@@ -7,7 +7,9 @@ import com.apigestionespacios.apigestionespacios.dtos.carrera.CarreraUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Carrera;
 import com.apigestionespacios.apigestionespacios.service.CarreraService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,9 +40,13 @@ public class CarreraController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Filtrar carreras por ID o nombre.", description = "Permite a administradores y profesores filtrar entre las distintas carreras. En caso de no proporcionar parámetros devolverá el listado total.")
+    @Operation(
+            summary = "Filtrar carreras por ID o nombre.",
+            description = "Permite a administradores y profesores filtrar entre las distintas carreras. En caso de no proporcionar parámetros devolverá el listado total.")
     public ResponseEntity<List<CarreraResponseDTO>> obtenerCarreras(
+            @Parameter(description = "ID de la carrera a buscar", example = "1", required = false)
             @RequestParam(required = false) Long id,
+            @Parameter(description = "Nombre de la carrera a buscar", example = "Ingeniería Informática", required = false)
             @RequestParam(required = false) String nombre
     )
     {
@@ -64,8 +70,12 @@ public class CarreraController {
      */
     @GetMapping("/{carreraId}/asignaturas")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener asignaturas de una carrera.", description = "Permite a administradores y profesores obtener un listado de las asignaturas de una carrera específica.")
-    public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturasDeCarrera(@PathVariable Long carreraId) {
+    @Operation(
+            summary = "Obtener asignaturas de una carrera.",
+            description = "Permite a administradores y profesores obtener un listado de las asignaturas de una carrera específica.")
+    public ResponseEntity<List<AsignaturaResponseDTO>> obtenerAsignaturasDeCarrera(
+            @Parameter(description = "ID de la carrera a buscar", example = "1")
+            @PathVariable Long carreraId) {
         return new ResponseEntity<>(carreraService.obtenerAsignaturasDeCarrera(carreraId), HttpStatus.OK);
     }
 
@@ -78,8 +88,12 @@ public class CarreraController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Crear nueva carrera.", description = "Permite a administradores crear una nueva carrera.")
-    public ResponseEntity<Carrera> crearCarrera(@RequestBody CarreraCreateDTO carrera) {
+    @Operation(
+            summary = "Crear nueva carrera.",
+            description = "Permite a administradores crear una nueva carrera.")
+    public ResponseEntity<Carrera> crearCarrera(
+            @Parameter(description = "DTO de creación de carrera", required = true)
+            @Valid @RequestBody CarreraCreateDTO carrera) {
         return new  ResponseEntity<>(carreraService.crearCarrera(carrera), HttpStatus.CREATED);
     }
 
@@ -93,9 +107,13 @@ public class CarreraController {
      */
     @PostMapping("/{carreraId}/asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Asignar asignaturas a una carrera.", description = "Permite a administradores asignar asignaturas a una carrera.")
+    @Operation(
+            summary = "Asignar asignaturas a una carrera.",
+            description = "Permite a administradores asignar asignaturas a una carrera.")
     public ResponseEntity<Void> asignarAsignaturaACarrera(
+            @Parameter(description = "ID de la carrera a la que se le asignarán las asignaturas", example = "1")
             @PathVariable Long carreraId,
+            @Parameter(description = "Lista de IDs de las asignaturas a asignar", example = "[1, 2, 3]", required = true)
             @RequestParam List<Long> asignaturaIds
     ) {
         carreraService.asignarAsignaturaACarrera(carreraId, asignaturaIds);
@@ -111,8 +129,12 @@ public class CarreraController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Actualizar carrera.", description = "Permite a administradores actualizar una carrera existente.")
-    public ResponseEntity<Carrera> actualizarCarrera(@RequestBody CarreraUpdateDTO carrera) {
+    @Operation(
+            summary = "Actualizar carrera.",
+            description = "Permite a administradores actualizar una carrera existente.")
+    public ResponseEntity<Carrera> actualizarCarrera(
+            @Parameter(description = "Datos de actualización de carrera", required = true)
+            @Valid @RequestBody CarreraUpdateDTO carrera) {
         return new ResponseEntity<>(carreraService.actualizarCarrera(carrera), HttpStatus.OK);
     }
 
@@ -125,8 +147,12 @@ public class CarreraController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Eliminar carrera por id.", description = "Permite a administradores eliminar una carrera.")
-    public  ResponseEntity<Carrera> eliminarCarrera(@PathVariable Long id) {
+    @Operation(
+            summary = "Eliminar carrera por id.",
+            description = "Permite a administradores eliminar una carrera.")
+    public  ResponseEntity<Carrera> eliminarCarrera(
+            @Parameter(description = "ID de la carrera a eliminar", example = "1")
+            @PathVariable Long id) {
         carreraService.eliminarCarrera(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -141,10 +167,13 @@ public class CarreraController {
      */
     @DeleteMapping("/{id}/asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Eliminar asignaturas de una carrera.", description = "Permite a administradores eliminar asignaturas de una carrera existente.")
-
+    @Operation(
+            summary = "Eliminar asignaturas de una carrera.",
+            description = "Permite a administradores eliminar asignaturas de una carrera existente.")
     public ResponseEntity<Void> removerAsignaturaDeCarrera(
+            @Parameter(description = "ID de la carrera de la que se eliminarán las asignaturas", example = "1")
             @PathVariable Long id,
+            @Parameter(description = "Lista de IDs de las asignaturas a eliminar de la carrera", example = "[1, 2, 3]", required = true)
             @RequestParam List<Long> asignaturaIds
     ) {
         carreraService.eliminarAsignaturaDeCarrera(id, asignaturaIds);

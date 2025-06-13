@@ -7,7 +7,9 @@ import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO
 import com.apigestionespacios.apigestionespacios.entities.Espacio;
 import com.apigestionespacios.apigestionespacios.service.EspacioService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,9 @@ public class EspacioController {
      */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener todos los espacios.", description = "Permite a administradores y profesores obtener un listado con todos los espacios.")
+    @Operation(
+            summary = "Obtener todos los espacios.",
+            description = "Permite a administradores y profesores obtener un listado con todos los espacios.")
     public ResponseEntity<List<EspacioResponseDTO>> obtenerEspacios() {
         return new ResponseEntity<>(espacioService.obtenerTodos(), HttpStatus.OK);
     }
@@ -49,8 +53,12 @@ public class EspacioController {
      */
     @GetMapping("/id/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener espacio por id.", description = "Permite a administradores y profesores obtener un espacio por medio de su id.")
-    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorId(@PathVariable Long id) {
+    @Operation(
+            summary = "Obtener espacio por id.",
+            description = "Permite a administradores y profesores obtener un espacio por medio de su id.")
+    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorId(
+            @Parameter(description = "ID del espacio a buscar", example = "1")
+            @PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerDTOPorId(id), HttpStatus.OK);
     }
 
@@ -63,8 +71,12 @@ public class EspacioController {
      */
     @GetMapping("/nombre/{nombre}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener espacio por nombre.", description = "Permite a administradores y profesores obtener un espacio por medio de su nombre.")
-    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorNombre(@PathVariable String nombre) {
+    @Operation(
+            summary = "Obtener espacio por nombre.",
+            description = "Permite a administradores y profesores obtener un espacio por medio de su nombre.")
+    public ResponseEntity<EspacioResponseDTO> obtenerEspacioPorNombre(
+            @Parameter(description = "Nombre del espacio a buscar", example = "Aula 101")
+            @PathVariable String nombre) {
         return new ResponseEntity<>(espacioService.obtenerPorNombre(nombre), HttpStatus.OK);
     }
 
@@ -77,8 +89,12 @@ public class EspacioController {
      */
     @GetMapping("/{id}/reservas")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Obtener reservas de un espacio.", description = "Permite a administradores obtener las reservas de un espacio por medio de su id.")
-    public ResponseEntity<List<ReservaResponseDTO>> obtenerReservasPorEspacio(@PathVariable Long id) {
+    @Operation(
+            summary = "Obtener reservas de un espacio.",
+            description = "Permite a administradores obtener las reservas de un espacio por medio de su id.")
+    public ResponseEntity<List<ReservaResponseDTO>> obtenerReservasPorEspacio(
+            @Parameter(description = "ID del espacio para obtener sus reservas", example = "1")
+            @PathVariable Long id) {
         return new ResponseEntity<>(espacioService.obtenerReservasPorEspacio(id), HttpStatus.OK);
     }
 
@@ -91,8 +107,12 @@ public class EspacioController {
      */
     @GetMapping("/capacidad/{capacidad}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener espacio por capacidad mayor a valor pasado por parámetro.", description = "Permite a administradores y profesores obtener un listado de los espacios que cumplan al menos con la capacidad especificada.")
-    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosPorCapacidadMayorA(@PathVariable Integer capacidad) {
+    @Operation(
+            summary = "Obtener espacio por capacidad mayor a valor pasado por parámetro.",
+            description = "Permite a administradores y profesores obtener un listado de los espacios que cumplan al menos con la capacidad especificada.")
+    public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosPorCapacidadMayorA(
+            @Parameter(description = "Capacidad mínima del espacio", example = "30")
+            @PathVariable Integer capacidad) {
         return new ResponseEntity<>(espacioService.obtenerPorCapacidadMayorA(capacidad), HttpStatus.OK);
     }
 
@@ -104,8 +124,9 @@ public class EspacioController {
      */
     @GetMapping("/proyector")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener espacios que tengan proyectores.", description = "Permite a administradores y profesores obtener un listado de los espacios que incluyan un proyector.")
-
+    @Operation(
+            summary = "Obtener espacios que tengan proyectores.",
+            description = "Permite a administradores y profesores obtener un listado de los espacios que incluyan un proyector.")
     public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosConProyector() {
         return new ResponseEntity<>(espacioService.obtenerConProyector(), HttpStatus.OK);
     }
@@ -118,7 +139,9 @@ public class EspacioController {
      */
     @GetMapping("/tv")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PROFESOR')")
-    @Operation(summary = "Obtener espacios que tengan tv.", description = "Permite a administradores y profesores obtener un listado de los espacios que incluyan un televisor.")
+    @Operation(
+            summary = "Obtener espacios que tengan tv.",
+            description = "Permite a administradores y profesores obtener un listado de los espacios que incluyan un televisor.")
     public ResponseEntity<List<EspacioResponseDTO>> obtenerEspaciosConTV() {
         return new ResponseEntity<>(espacioService.obtenerConTV(), HttpStatus.OK);
     }
@@ -132,9 +155,12 @@ public class EspacioController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Crear espacio.", description = "Permite a administradores crear un nuevo espacio.")
-
-    public ResponseEntity<Espacio> crearEspacio(@RequestBody EspacioCreateDTO espacio) {
+    @Operation(
+            summary = "Crear espacio.",
+            description = "Permite a administradores crear un nuevo espacio.")
+    public ResponseEntity<Espacio> crearEspacio(
+            @Parameter(description = "Datos del espacio a crear")
+            @Valid @RequestBody EspacioCreateDTO espacio) {
         return new  ResponseEntity<>(espacioService.guardar(espacio), HttpStatus.CREATED);
     }
 
@@ -147,9 +173,12 @@ public class EspacioController {
      */
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Actualizar espacio.", description = "Permite a administradores actualizar un espacio.")
-
-    public ResponseEntity<Espacio> actualizarEspacio(@RequestBody EspacioUpdateDTO espacio) {
+    @Operation(
+            summary = "Actualizar espacio.",
+            description = "Permite a administradores actualizar un espacio.")
+    public ResponseEntity<Espacio> actualizarEspacio(
+            @Parameter(description = "Datos del espacio a actualizar")
+            @Valid @RequestBody EspacioUpdateDTO espacio) {
         return new ResponseEntity<>(espacioService.actualizar(espacio), HttpStatus.OK);
     }
 
@@ -162,9 +191,12 @@ public class EspacioController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Eliminar espacio.", description = "Permite a administradores eliminar un espacio.")
-
-    public  ResponseEntity<Espacio> eliminarEspacio(@PathVariable Long id) {
+    @Operation(
+            summary = "Eliminar espacio.",
+            description = "Permite a administradores eliminar un espacio.")
+    public  ResponseEntity<Espacio> eliminarEspacio(
+            @Parameter(description = "ID del espacio a eliminar", example = "1")
+            @PathVariable Long id) {
         espacioService.eliminar(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
