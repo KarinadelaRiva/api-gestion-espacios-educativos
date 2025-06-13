@@ -83,6 +83,9 @@ public class ReservaController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerReservas() {
         List<ReservaResponseDTO> reservasDTO = reservaService.listarReservasDTO();
+        if (reservasDTO.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(reservasDTO);
     }
 
