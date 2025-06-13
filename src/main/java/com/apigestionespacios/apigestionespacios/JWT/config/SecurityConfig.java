@@ -22,15 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-/*
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
-
- */
-
-
+    private final String[] rutasSinRestriccion = {"/auth/login", "/reservas/cronograma-por-dia", "/reservas/cronograma"};
+    private final String[] rutasSinRestriccionPOST = {"/usuarios"};
 
     // Bean para codificar y verificar contraseñas con BCrypt
 
@@ -66,18 +59,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuarios").permitAll()
-                        /*
-                        .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated()
-
-                         */
-                        .requestMatchers(HttpMethod.GET, "/reservas/cronograma-por-dia").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/reservas/cronograma").permitAll()
-
-
+                        .requestMatchers(rutasSinRestriccion).permitAll()
+                        .requestMatchers(HttpMethod.POST, rutasSinRestriccionPOST).permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider(userDetailsService))
