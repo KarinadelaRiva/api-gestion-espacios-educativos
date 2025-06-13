@@ -16,7 +16,6 @@ import java.time.LocalTime;
 public class SolicitudCreateDTO {
 
     @Schema(description = "ID del usuario que realiza la solicitud", example = "5")
-    @NotNull(message = "Debe especificar el ID del usuario")
     private Long usuarioId;
 
     @Schema(description = "ID de la reserva original asociada (si aplica)", example = "1001")

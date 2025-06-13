@@ -156,14 +156,13 @@ public class SolicitudService {
      * @return DTO con los datos de la solicitud creada
      * @throws IllegalArgumentException si no se especifica un nuevo espacio o si la reserva original no es nula
      */
-    public Solicitud solicitarNuevaReservaDTO(SolicitudCreateDTO dto) {
+    public Solicitud solicitarNuevaReservaDTO(Long idSolicitante, SolicitudCreateDTO dto) {
         Espacio espacioSolicitado = espacioService.obtenerPorId(dto.getNuevoEspacioId());
         Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
 
         if (comision.getAsignatura().getRequiereLaboratorio() && !(espacioSolicitado instanceof Laboratorio)) {
             throw new EntityValidationException("El espacio solicitado debe ser un laboratorio para esta asignatura.");
         }
-
 
         if(espacioSolicitado.getCapacidad() < comision.getCantidadAlumnos()) {
             throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio solicitado.");
@@ -180,6 +179,8 @@ public class SolicitudService {
         if (dto.getReservaOriginalId() != null) {
             throw new IllegalArgumentException("Para nuevas reservas, la reserva original debe ser nula.");
         }
+
+        dto.setUsuarioId(idSolicitante);
 
         Solicitud solicitud = solicitudDTOtoSolicitud(dto);
 
