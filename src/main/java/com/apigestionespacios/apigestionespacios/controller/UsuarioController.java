@@ -17,7 +17,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -80,11 +82,15 @@ public class UsuarioController {
             description = "Elimina un usuario específico según su ID.Solo accesible para administradores.")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> eliminarUsuario(
+    public ResponseEntity<Map<String, String>> eliminarUsuario(
             @Parameter(description = "ID del usuario a eliminar", required = true)
             @PathVariable Long id) {
         usuarioService.eliminar(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Usuario eliminado correctamente");
+
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @Operation(

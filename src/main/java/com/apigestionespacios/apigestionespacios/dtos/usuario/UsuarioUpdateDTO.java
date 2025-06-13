@@ -21,17 +21,14 @@ public class UsuarioUpdateDTO {
     private String currentPassword;
 
     @Schema(description = "Nombre del usuario", example = "Daniel")
-    @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 50, message = "El nombre debe tener máximo 50 caracteres")
     private String nombre;
 
     @Schema(description = "Apellido del usuario", example = "Diaz")
-    @NotBlank(message = "El apellido es obligatorio")
     @Size(max = 50, message = "El apellido debe tener máximo 50 caracteres")
     private String apellido;
 
     @Schema(description = "Nombre de usuario para login", example = "daniel123")
-    @NotBlank(message = "El username es obligatorio")
     @Size(max = 50, message = "El username debe tener máximo 50 caracteres")
     private String username;
 
