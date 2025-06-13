@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
@@ -188,18 +189,21 @@ public class ReservaService {
      * @param id ID de la reserva a eliminar.
      * @throws ResourceNotFoundException si no se encuentra la reserva.
      */
-    public void eliminarReserva(Long id) {
+    public void finalizarReserva(Long id) {
         if (!reservaRepository.existsById(id)) {
             throw new EntityNotFoundException("Reserva con ID " + id + " no encontrada");
         }
 
-        try {
-            reservaRepository.deleteById(id);
-        } catch (DataIntegrityViolationException e) {
-            throw new EntityValidationException("No se puede eliminar la reserva. Tiene dependencias activas.");
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar la reserva: " + e.getMessage(), e);
+        Reserva reserva = obtenerReserva(id);
+
+        if (reserva.getFechaInicio().isAfter(LocalDate.now())) {
+            reserva.setFechaInicio(LocalDate.now());
+            reserva.setHoraInicio(LocalTime.now());// Si la reserva está en el futuro, la marca como iniciada hoy
         }
+        reserva.setFechaFin(LocalDate.now()); // Marca la reserva como finalizada
+        reserva.setHoraFin(LocalTime.now()); // Marca la hora de finalización como ahora
+
+        reservaRepository.save(reserva);
     }
 
     /**
@@ -245,7 +249,9 @@ public class ReservaService {
      */
     public List<ReservaResponseDTO> obtenerTodasOrdenadas() {
         return listaReservasAReservasResponseDTO(
-                reservaRepository.findAll(Sort.by("fechaInicio").ascending().and(Sort.by("horaInicio").ascending())));
+                reservaRepository.findAll(Sort.by("fechaInicio").ascending().and(Sort.by("horaInicio").ascending())).stream()
+                        .filter(r -> !r.getHoraInicio().equals(r.getHoraFin()))
+                        .toList());
     }
 
     /**
@@ -285,7 +291,9 @@ public class ReservaService {
         DiaSemana diaEnum = DiaSemana.desdeDayOfWeek(fecha.getDayOfWeek()); // Tu enum DiaSemana tiene LUNES, MARTES, etc.
 
         List<ReservaResponseDTO> reservasResponse = listaReservasAReservasResponseDTO(
-                reservaRepository.findReservasActivasParaFecha(fecha, diaEnum)
+                reservaRepository.findReservasActivasParaFecha(fecha, diaEnum).stream()
+                        .filter(r -> !r.getHoraInicio().equals(r.getHoraFin())) // <- este filtro es el que pediste
+                        .collect(Collectors.toList())
         );
 
         return reservasResponse.stream()

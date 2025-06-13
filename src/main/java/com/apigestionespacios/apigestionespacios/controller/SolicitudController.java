@@ -32,6 +32,7 @@ public class SolicitudController {
     private final SolicitudService solicitudService;
     private final UsuarioService usuarioService;
 
+    @Autowired
     public SolicitudController(SolicitudService solicitudService, UsuarioService usuarioService) {
         this.solicitudService = solicitudService;
         this.usuarioService = usuarioService;

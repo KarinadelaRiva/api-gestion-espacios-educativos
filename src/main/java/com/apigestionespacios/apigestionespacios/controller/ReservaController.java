@@ -25,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,14 +126,18 @@ public class ReservaController {
 
     @Operation(
             summary = "Eliminar reserva",
-            description = "Permite a administradores eliminar una reserva existente por su ID.")
-    @DeleteMapping("/{id}")
+            description = "Permite a administradores finalizar una reserva existente por su ID.")
+    @PostMapping("/{id}/finalizar")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> eliminarReserva(
+    public ResponseEntity<Map<String, String>> finalizarReserva(
             @Parameter(description = "ID de la reserva a eliminar", required = true, example = "1")
             @PathVariable Long id) {
-        reservaService.eliminarReserva(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        reservaService.finalizarReserva(id);
+
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Reserva finalizada correctamente");
+
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     @Operation(
