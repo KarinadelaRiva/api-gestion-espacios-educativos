@@ -255,7 +255,7 @@ public class ReservaService {
      */
     public boolean existeSolapamiento(Reserva nuevaReserva) {
         List<Reserva> reservasExistentes = reservaRepository
-                .findByEspacioIdAndDia(nuevaReserva.getEspacio().getId(), nuevaReserva.getDia().toString());
+                .findByEspacioIdAndDia(nuevaReserva.getEspacio().getId(), nuevaReserva.getDia());
 
         for (Reserva existente : reservasExistentes) {
             boolean fechasSeSolapan =

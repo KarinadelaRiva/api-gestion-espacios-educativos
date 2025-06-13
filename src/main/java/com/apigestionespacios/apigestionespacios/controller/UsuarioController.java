@@ -104,11 +104,8 @@ public class UsuarioController {
     @GetMapping("/me")
     @PreAuthorize("hasAnyRole('ADMIN', 'PROFESOR')")
     public ResponseEntity<UsuarioResponseDTO> obtenerUsuarioLogueado(Authentication authentication) {
-        Usuario usuarioLogueado = (Usuario) authentication.getPrincipal();
-        Long usuarioId = usuarioLogueado.getId();
-
-        UsuarioResponseDTO usuario = usuarioService.obtenerPorIdDTO(usuarioId);
-        return new ResponseEntity<>(usuario, HttpStatus.OK);
+        String username = authentication.getName();
+        return new ResponseEntity<>(usuarioService.obtenerPorUsername(username), HttpStatus.OK);
     }
 
     @Operation(

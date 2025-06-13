@@ -40,7 +40,8 @@ public class Usuario implements UserDetails {
 
     @Column(
             nullable = false,
-            length = 50
+            length = 50,
+            unique = true
     )
     private String username;
 

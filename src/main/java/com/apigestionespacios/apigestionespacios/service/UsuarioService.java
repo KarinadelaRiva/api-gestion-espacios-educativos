@@ -82,6 +82,12 @@ public class UsuarioService implements UserDetailsService {
         return usuarioToUsuarioResponseDTO(usuario);
     }
 
+    public UsuarioResponseDTO obtenerPorUsername(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con username: " + username));
+        return this.usuarioToUsuarioResponseDTO(usuario);
+    }
+
     /**
      * Obtiene un usuario por su username y lo convierte a DTO de respuesta.
      *

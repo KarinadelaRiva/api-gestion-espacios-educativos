@@ -1,6 +1,7 @@
 package com.apigestionespacios.apigestionespacios.repository;
 
 import com.apigestionespacios.apigestionespacios.entities.Reserva;
+import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,7 +21,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
 
     List<Reserva> findByFechaInicio(LocalDate fecha, Sort sort);
 
-    List<Reserva> findByEspacioIdAndDia(Long espacioId, String dia);
+    List<Reserva> findByEspacioIdAndDia(Long espacioId, DiaSemana dia);
 
     /**
      * Busca reservas por fecha.
