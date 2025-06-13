@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/carreras")
@@ -105,19 +107,19 @@ public class CarreraController {
      * @param asignaturaIds Lista de IDs de las asignaturas a asignar.
      * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
      */
-    @PostMapping("/{carreraId}/asignaturas")
+    @PostMapping("/{carreraId}/agregar-     asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Asignar asignaturas a una carrera.",
             description = "Permite a administradores asignar asignaturas a una carrera.")
-    public ResponseEntity<Void> asignarAsignaturaACarrera(
+    public ResponseEntity<CarreraResponseDTO> asignarAsignaturaACarrera(
             @Parameter(description = "ID de la carrera a la que se le asignarán las asignaturas", example = "1")
             @PathVariable Long carreraId,
             @Parameter(description = "Lista de IDs de las asignaturas a asignar", example = "[1, 2, 3]", required = true)
-            @RequestParam List<Long> asignaturaIds
+            @RequestBody List<Long> asignaturaIds
     ) {
         carreraService.asignarAsignaturaACarrera(carreraId, asignaturaIds);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(carreraService.obtenerDTOPorId(carreraId));
     }
 
     /**
@@ -150,11 +152,15 @@ public class CarreraController {
     @Operation(
             summary = "Eliminar carrera por id.",
             description = "Permite a administradores eliminar una carrera.")
-    public  ResponseEntity<Carrera> eliminarCarrera(
+    public  ResponseEntity<Map<String, String>> eliminarCarrera(
             @Parameter(description = "ID de la carrera a eliminar", example = "1")
             @PathVariable Long id) {
         carreraService.eliminarCarrera(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Carrera eliminada correctamente");
+
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
 
     /**
@@ -165,19 +171,19 @@ public class CarreraController {
      * @param asignaturaIds Lista de IDs de las asignaturas a eliminar de la carrera.
      * @return Respuesta vacía con código 204 No Content si la operación es exitosa.
      */
-    @DeleteMapping("/{id}/asignaturas")
+    @PostMapping("/{id}/remover-asignaturas")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(
             summary = "Eliminar asignaturas de una carrera.",
             description = "Permite a administradores eliminar asignaturas de una carrera existente.")
-    public ResponseEntity<Void> removerAsignaturaDeCarrera(
+    public ResponseEntity<CarreraResponseDTO> removerAsignaturaDeCarrera(
             @Parameter(description = "ID de la carrera de la que se eliminarán las asignaturas", example = "1")
             @PathVariable Long id,
             @Parameter(description = "Lista de IDs de las asignaturas a eliminar de la carrera", example = "[1, 2, 3]", required = true)
-            @RequestParam List<Long> asignaturaIds
+            @RequestBody List<Long> asignaturaIds
     ) {
         carreraService.eliminarAsignaturaDeCarrera(id, asignaturaIds);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok(carreraService.obtenerDTOPorId(id));
     }
 
 }
