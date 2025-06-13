@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import com.apigestionespacios.apigestionespacios.entities.enums.Rol;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,8 +46,8 @@ public class Usuario {
     )
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
+    @Enumerated(EnumType.STRING) // Usar el enum directamente y guardarlo como texto
+    @Column(nullable = false)
     private Rol rol;
 
     @OneToMany(
@@ -57,7 +58,7 @@ public class Usuario {
     @JsonIgnore
     private List<Comision> comisiones;
 
-    public Set<? extends GrantedAuthority> getRoles() {
+    public Set<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(rol);
     }
 } 

@@ -8,7 +8,7 @@ public enum Rol implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return "";
+        return "ROLE_" + this.name();
     }
 }
 
