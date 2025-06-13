@@ -76,7 +76,12 @@ public class SecurityConfig {
                          */
                         .requestMatchers(HttpMethod.GET, "/reservas/cronograma-por-dia").permitAll()
                         .requestMatchers(HttpMethod.GET, "/reservas/cronograma").permitAll()
-
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
 
                         .anyRequest().authenticated()
                 )

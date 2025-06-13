@@ -4,10 +4,7 @@ import com.apigestionespacios.apigestionespacios.dtos.cronograma.CronogramaEspac
 import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaCreateDTO;
 import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaResponseDTO;
 import com.apigestionespacios.apigestionespacios.dtos.reserva.ReservaUpdateDTO;
-import com.apigestionespacios.apigestionespacios.entities.Comision;
-import com.apigestionespacios.apigestionespacios.entities.Espacio;
-import com.apigestionespacios.apigestionespacios.entities.Reserva;
-import com.apigestionespacios.apigestionespacios.entities.Solicitud;
+import com.apigestionespacios.apigestionespacios.entities.*;
 import com.apigestionespacios.apigestionespacios.entities.enums.DiaSemana;
 import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;
 import com.apigestionespacios.apigestionespacios.exceptions.ReservaSolapadaException;
@@ -114,6 +111,10 @@ public class ReservaService {
         Espacio espacio = espacioService.obtenerPorId(dto.getEspacioId());
         Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
 
+        if (comision.getAsignatura().getRequiereLaboratorio() && !(espacio instanceof Laboratorio)) {
+            throw new EntityValidationException("El espacio solicitado debe ser un laboratorio para esta asignatura.");
+        }
+
         if(espacio.getCapacidad() < comision.getCantidadAlumnos()) {
             throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio.");
         }
@@ -154,6 +155,10 @@ public class ReservaService {
 
         // Actualiza espacio si cambió
         if (!reservaExistente.getEspacio().getId().equals(dto.getEspacioId())) {
+
+            if (reservaExistente.getComision().getAsignatura().getRequiereLaboratorio() && !(reservaExistente.getEspacio() instanceof Laboratorio)) {
+                throw new EntityValidationException("El espacio solicitado debe ser un laboratorio para esta asignatura.");
+            }
 
             // Verifica que el nuevo espacio tenga la capacidad suficiente
             if(espacioService.obtenerPorId(dto.getEspacioId()).getCapacidad() < reservaExistente.getComision().getCantidadAlumnos()) {

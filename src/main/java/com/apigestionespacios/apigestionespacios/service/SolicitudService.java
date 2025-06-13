@@ -154,6 +154,11 @@ public class SolicitudService {
         Espacio espacioSolicitado = espacioService.obtenerPorId(dto.getNuevoEspacioId());
         Comision comision = comisionService.obtenerComisionPorId(dto.getComisionId());
 
+        if (comision.getAsignatura().getRequiereLaboratorio() && !(espacioSolicitado instanceof Laboratorio)) {
+            throw new EntityValidationException("El espacio solicitado debe ser un laboratorio para esta asignatura.");
+        }
+
+
         if(espacioSolicitado.getCapacidad() < comision.getCantidadAlumnos()) {
             throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio solicitado.");
         }
@@ -195,6 +200,11 @@ public class SolicitudService {
         if (reservaOriginal == null) {
             throw new IllegalArgumentException("Reserva original no encontrada con ID: " + dto.getReservaOriginalId());
         }
+
+        if (comision.getAsignatura().getRequiereLaboratorio() && !(espacioSolicitado instanceof Laboratorio)) {
+            throw new EntityValidationException("El espacio solicitado debe ser un laboratorio para esta asignatura.");
+        }
+
 
         if(espacioSolicitado.getCapacidad() < comision.getCantidadAlumnos()) {
             throw new EntityValidationException("La cantidad de alumnos no puede ser mayor a la capacidad del espacio solicitado.");
