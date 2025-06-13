@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +48,10 @@ public class Usuario {
     )
     private String password;
 
+    @Enumerated(EnumType.STRING) // Usar el enum directamente y guardarlo como texto
+    @Column(nullable = false)
+    private Rol rol;
+
     @OneToMany(
             mappedBy = "profesor", // Nombre de la propiedad en la clase Comision que hace referencia a Usuario
             cascade = CascadeType.ALL,
@@ -59,10 +64,14 @@ public class Usuario {
             nullable = false,
             length = 20
     )
-    @Enumerated(EnumType.STRING)
-    private Rol rol;
+   /* @Enumerated(EnumType.STRING)
+    private Rol rol; */
 
     public Set<? extends GrantedAuthority> getRoles() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + rol.name()));
+
+    /*public Set<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(rol); */
+
     }
 } 
