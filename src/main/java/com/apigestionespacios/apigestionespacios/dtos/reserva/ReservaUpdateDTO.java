@@ -20,7 +20,6 @@ public class ReservaUpdateDTO {
 
     @Schema(description = "Fecha de inicio de la reserva", example = "2025-06-15")
     @NotNull(message = "La fecha de inicio es obligatoria")
-    @FutureOrPresent(message = "La fecha de inicio debe ser hoy o en el futuro")
     private LocalDate fechaInicio;
 
     @Schema(description = "Fecha de fin de la reserva", example = "2025-06-20")

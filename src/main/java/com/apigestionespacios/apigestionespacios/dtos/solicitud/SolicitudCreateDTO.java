@@ -36,10 +36,6 @@ public class SolicitudCreateDTO {
     @Future(message = "La fecha de fin debe ser en el futuro")
     private LocalDate fechaFin;
 
-    @Schema(description = "Día de la semana solicitado", example = "LUNES")
-    @NotNull(message = "Debe especificar el día de la semana")
-    private DiaSemana diaSemana;
-
     @Schema(description = "Hora de inicio solicitada", example = "08:00")
     @NotNull(message = "La hora de inicio es obligatoria")
     private LocalTime horaInicio;
