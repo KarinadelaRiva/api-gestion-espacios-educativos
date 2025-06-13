@@ -125,7 +125,6 @@ public class ReservaController {
             description = "Permite a administradores eliminar una reserva existente por su ID.")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-
     public ResponseEntity<Void> eliminarReserva(
             @Parameter(description = "ID de la reserva a eliminar", required = true, example = "1")
             @PathVariable Long id) {

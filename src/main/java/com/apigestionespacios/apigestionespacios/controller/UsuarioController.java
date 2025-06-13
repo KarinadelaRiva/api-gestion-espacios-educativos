@@ -68,7 +68,7 @@ public class UsuarioController {
             summary = "Crear usuario",
             description = "Crea un nuevo usuario con los datos proporcionados en el cuerpo de la petición.")
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Usuario> crearUsuario(
             @Parameter(description = "Datos del usuario a crear", required = true)
             @Valid @RequestBody UsuarioCreateDTO usuario) {
@@ -79,7 +79,7 @@ public class UsuarioController {
             summary = "Eliminar usuario",
             description = "Elimina un usuario específico según su ID.Solo accesible para administradores.")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> eliminarUsuario(
             @Parameter(description = "ID del usuario a eliminar", required = true)
             @PathVariable Long id) {
