@@ -8,6 +8,7 @@ import com.apigestionespacios.apigestionespacios.entities.Reserva;
 import com.apigestionespacios.apigestionespacios.entities.Usuario;
 import com.apigestionespacios.apigestionespacios.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,44 +42,33 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
-    /**
-     * Endpoint para crear una nueva reserva.
-     * Solo accesible por administradores.
-     *
-     * @param dto Objeto DTO con los datos de la reserva a crear.
-     * @return Reserva creada.
-     */
-    @Operation(summary = "Crear reserva", description = "Permite a administradores crear una nueva reserva a partir de los datos proporcionados en el DTO.")
+    @Operation(
+            summary = "Crear reserva",
+            description = "Permite a administradores crear una nueva reserva a partir de los datos proporcionados en el DTO.")
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Reserva> crearReserva(@Valid @RequestBody ReservaCreateDTO dto) {
+    public ResponseEntity<Reserva> crearReserva(
+            @Parameter(description = "Datos de la reserva a crear", required = true)
+            @Valid @RequestBody ReservaCreateDTO dto) {
         Reserva reserva = reservaService.crearReservaDesdeDTO(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
     }
 
-
-    /**
-     * Endpoint para actualizar una reserva existente.
-     * Solo accesible por administradores.
-     *
-     * @param reservaUpdateDTO Objeto DTO con los datos actualizados de la reserva.
-     * @return Reserva actualizada.
-     */
-    @Operation(summary = "Actualizar reserva", description = "Permite a administradores actualizar una reserva existente usando los datos del DTO.")
+    @Operation(
+            summary = "Actualizar reserva",
+            description = "Permite a administradores actualizar una reserva existente usando los datos del DTO.")
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Reserva> actualizarReserva(@Valid @RequestBody ReservaUpdateDTO reservaUpdateDTO) {
+    public ResponseEntity<Reserva> actualizarReserva(
+            @Parameter(description = "Datos de la reserva a actualizar", required = true)
+            @Valid @RequestBody ReservaUpdateDTO reservaUpdateDTO) {
         Reserva reservaActualizada = reservaService.actualizarReservaDesdeDTO(reservaUpdateDTO);
         return ResponseEntity.ok(reservaActualizada);
     }
 
-    /**
-     * Endpoint para listar todas las reservas.
-     * Solo accesible por administradores.
-     *
-     * @return Lista de reservas en formato DTO.
-     */
-    @Operation(summary = "Listar reservas", description = "Permite a administradores obtener la lista completa de reservas registradas.")
+    @Operation(
+            summary = "Listar reservas",
+            description = "Permite a administradores obtener la lista completa de reservas registradas.")
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerReservas() {
@@ -89,23 +79,19 @@ public class ReservaController {
         return ResponseEntity.ok(reservasDTO);
     }
 
-    /**
-     * Endpoint para obtener el historial completo de reservas paginadas.
-     * Solo accesible por administradores.
-     *
-     * @param page Número de página a consultar.
-     * @param size Tamaño de la página.
-     * @param sortBy Campo por el cual ordenar las reservas.
-     * @param sortDir Dirección del ordenamiento (ascendente o descendente).
-     * @return Página de reservas.
-     */
-    @Operation(summary = "Historial paginado de reservas", description = "Permite a administradores obtener el historial completo de reservas de forma paginada y ordenada.")
+    @Operation(
+            summary = "Historial paginado de reservas",
+            description = "Permite a administradores obtener el historial completo de reservas de forma paginada y ordenada.")
     @GetMapping("/historial-paginado")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<ReservaResponseDTO>> obtenerReservas(
+            @Parameter(description = "Número de página a consultar", example = "0")
             @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Tamaño de la página", example = "10")
             @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Campo por el cual ordenar las reservas", example = "fechaInicio")
             @RequestParam(defaultValue = "fechaInicio") String sortBy,
+            @Parameter(description = "Dirección del ordenamiento (asc o desc)", example = "asc")
             @RequestParam(defaultValue = "asc") String sortDir
     ) {
         Pageable pageable = PageRequest.of(
@@ -123,44 +109,33 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
-    /**
-     * Endpoint para obtener una reserva por su ID.
-     * Solo accesible por administradores.
-     *
-     * @param id ID de la reserva a consultar.
-     * @return Reserva encontrada.
-     */
-    @Operation(summary = "Obtener reserva por ID", description = "Permite a administradores obtener los detalles de una reserva específica por su ID.")
+    @Operation(
+            summary = "Obtener reserva por ID",
+            description = "Permite a administradores obtener los detalles de una reserva específica por su ID.")
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ReservaResponseDTO> obtenerReserva(@PathVariable Long id) {
+    public ResponseEntity<ReservaResponseDTO> obtenerReserva(
+            @Parameter(description = "ID de la reserva a consultar", required = true, example = "1")
+            @PathVariable Long id) {
         return new ResponseEntity<>(reservaService.obtenerReservaDTO(id), HttpStatus.OK);
     }
 
-    /**
-     * Endpoint para eliminar una reserva por su ID.
-     * Solo accesible por administradores.
-     *
-     * @param id ID de la reserva a eliminar.
-     * @return Respuesta vacía con estado NO_CONTENT.
-     */
-    @Operation(summary = "Eliminar reserva", description = "Permite a administradores eliminar una reserva existente por su ID.")
+    @Operation(
+            summary = "Eliminar reserva",
+            description = "Permite a administradores eliminar una reserva existente por su ID.")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
 
-    public ResponseEntity<Void> eliminarReserva(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarReserva(
+            @Parameter(description = "ID de la reserva a eliminar", required = true, example = "1")
+            @PathVariable Long id) {
         reservaService.eliminarReserva(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    /**
-     * Endpoint para obtener las reservas del profesor logueado.
-     * Solo accesible por profesores.
-     *
-     * @param authentication Autenticación del usuario (profesor).
-     * @return Lista de reservas del profesor autenticado.
-     */
-    @Operation(summary = "Listar reservas históricas y vigentes de profesor logueado.", description = "Permite a profesores obtener el historial de sus propias reservas.")
+    @Operation(
+            summary = "Listar reservas históricas y vigentes de profesor logueado.",
+            description = "Permite a profesores obtener el historial de sus propias reservas.")
     @PreAuthorize("hasRole('PROFESOR')")
     @GetMapping("/mis-reservas")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerMiHistorialReservas(Authentication authentication) {
@@ -176,14 +151,9 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
-    /**
-     * Endpoint para obtener las reservas vigentes del profesor logueado.
-     * Solo accesible por profesores.
-     *
-     * @param authentication Autenticación del usuario (profesor).
-     * @return Lista de reservas vigentes del profesor autenticado.
-     */
-    @Operation(summary = "Listar reservas vigentes de profesor logueado", description = "Permite a profesores obtener la lista de sus reservas vigentes.")
+    @Operation(
+            summary = "Listar reservas vigentes de profesor logueado",
+            description = "Permite a profesores obtener la lista de sus reservas vigentes.")
     @PreAuthorize("hasRole('PROFESOR')")
     @GetMapping("/mis-reservas/vigentes")
     public ResponseEntity<List<ReservaResponseDTO>> obtenerMisReservasVigentes(Authentication authentication) {
@@ -199,14 +169,15 @@ public class ReservaController {
         return ResponseEntity.ok(reservas);
     }
 
-
     /**
      * Endpoint para obtener el cronograma completo de reservas agrupado por espacio.
      * Acceso público, no requiere autenticación.
      *
      * @return Mapa donde la clave es el nombre del espacio y el valor es una lista de reservas.
      */
-    @Operation(summary = "Cronograma completo de reservas", description = "Obtiene el cronograma completo de reservas agrupado por espacio. Acceso público.")
+    @Operation(
+            summary = "Cronograma completo de reservas",
+            description = "Obtiene el cronograma completo de reservas agrupado por espacio. Acceso público.")
     @GetMapping("/cronograma")
     public ResponseEntity<Map<String, List<ReservaResponseDTO>>> obtenerCronogramaCompletoAgrupadoPorEspacio() {
         // Trae todas las reservas ordenadas por fechaInicio y horaInicio
@@ -230,9 +201,12 @@ public class ReservaController {
      * @param fecha Fecha para la cual se desea obtener el cronograma.
      * @return Lista de cronogramas de espacios para la fecha especificada.
      */
-    @Operation(summary = "Cronograma de espacios por fecha", description = "Obtiene el cronograma de reservas para una fecha específica, agrupado por espacio. Acceso público.")
+    @Operation(
+            summary = "Cronograma de espacios por fecha",
+            description = "Obtiene el cronograma de reservas para una fecha específica, agrupado por espacio. Acceso público.")
     @GetMapping("/cronograma-por-dia")
     public ResponseEntity<List<CronogramaEspaciosDTO>> obtenerCronogramaParaFechaAgrupadoPorEspacio(
+            @Parameter(description = "Fecha para la cual se desea obtener el cronograma (formato: yyyy-MM-dd)", required = true, example = "2025-06-15")
             @RequestParam("fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
 
         List<CronogramaEspaciosDTO> cronograma = reservaService.obtenerCronogramaDTOParaFecha(fecha);

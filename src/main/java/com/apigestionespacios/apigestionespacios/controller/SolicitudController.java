@@ -8,6 +8,7 @@ import com.apigestionespacios.apigestionespacios.service.SolicitudService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -140,7 +141,7 @@ public class SolicitudController {
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<Solicitud> solicitarNuevaReserva(
             @Parameter(description = "Datos de la nueva solicitud", required = true)
-            @RequestBody SolicitudCreateDTO solicitud) {
+            @Valid @RequestBody SolicitudCreateDTO solicitud) {
         try {
             Solicitud nueva = solicitudService.solicitarNuevaReservaDTO(solicitud);
             return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
@@ -156,7 +157,7 @@ public class SolicitudController {
     @PreAuthorize("hasRole('PROFESOR')")
     public ResponseEntity<Solicitud> solicitarModificacionReservaPorId(
             @Parameter(description = "Datos de la nueva solicitud de modificación", required = true)
-            @RequestBody SolicitudCreateDTO datosNuevos ) {
+            @Valid @RequestBody SolicitudCreateDTO datosNuevos ) {
         try {
             Solicitud solicitud = solicitudService.solicitarModificacionPorIdReservaDTO(datosNuevos);
             return ResponseEntity.status(HttpStatus.CREATED).body(solicitud);
