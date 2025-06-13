@@ -15,8 +15,6 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    //private static final String SECRET_KEY = "clave-super-secreta-para-firmar-los-jwt-segura-y-larga";
-
     // Clave ubicada en el archivo de configuración (application.properties)
     @Value("${jwt.secret}")
     private String secretKey;

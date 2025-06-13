@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    // lanzado cuando la solicitud no cumple con las reglas de negocio o valiadciones logicas
+    // lanzado cuando la solicitud no cumple con las reglas de negocio o validaciones logicas
     @ExceptionHandler(EntityValidationException.class)
     public ResponseEntity<String> manejarEntityValidationException(EntityValidationException ex) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ex.getMessage());

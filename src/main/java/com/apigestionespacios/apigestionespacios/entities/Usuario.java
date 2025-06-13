@@ -1,9 +1,11 @@
 package com.apigestionespacios.apigestionespacios.entities;
 
+import com.apigestionespacios.apigestionespacios.entities.enums.Rol;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,10 +47,6 @@ public class Usuario {
     )
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "rol_id", nullable = false)
-    private Rol rol;
-
     @OneToMany(
             mappedBy = "profesor", // Nombre de la propiedad en la clase Comision que hace referencia a Usuario
             cascade = CascadeType.ALL,
@@ -57,7 +55,14 @@ public class Usuario {
     @JsonIgnore
     private List<Comision> comisiones;
 
+    @Column(
+            nullable = false,
+            length = 20
+    )
+    @Enumerated(EnumType.STRING)
+    private Rol rol;
+
     public Set<? extends GrantedAuthority> getRoles() {
-        return Collections.singleton(rol);
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 } 

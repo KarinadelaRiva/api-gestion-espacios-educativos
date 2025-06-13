@@ -164,7 +164,7 @@ public class ComisionService {
     private void validarProfesor(Long idUsuarioProfesor) {
         Usuario usuario = usuarioService.obtenerPorId(idUsuarioProfesor);
 
-        if (!"PROFESOR".equalsIgnoreCase(usuario.getRol().getNombre())) {
+        if (!"PROFESOR".equalsIgnoreCase(usuario.getRol().name())) {
             throw new EntityValidationException("El usuario con ID " + idUsuarioProfesor + " no tiene el rol de profesor");
         }
     }

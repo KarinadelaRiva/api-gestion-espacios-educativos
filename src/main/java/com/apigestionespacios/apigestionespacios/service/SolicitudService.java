@@ -1,7 +1,7 @@
 package com.apigestionespacios.apigestionespacios.service;
 
-import com.apigestionespacios.apigestionespacios.dtos.SolicitudCreateDTO;
-import com.apigestionespacios.apigestionespacios.dtos.SolicitudResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudResponseDTO;
 import com.apigestionespacios.apigestionespacios.entities.*;
 import com.apigestionespacios.apigestionespacios.entities.enums.EstadoSolicitud;
 import com.apigestionespacios.apigestionespacios.exceptions.EntityValidationException;

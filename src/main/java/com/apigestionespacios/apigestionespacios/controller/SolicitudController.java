@@ -1,5 +1,8 @@
 package com.apigestionespacios.apigestionespacios.controller;
 
+import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudCreateDTO;
+import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudResponseDTO;
+import com.apigestionespacios.apigestionespacios.dtos.solicitud.SolicitudUpdateDTO;
 import com.apigestionespacios.apigestionespacios.entities.Solicitud;
 import com.apigestionespacios.apigestionespacios.service.SolicitudService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,8 +67,8 @@ public class SolicitudController {
 
     @Operation(summary = "Modificar solicitud", description = "Actualiza los datos de una solicitud existente según su ID.")
     @PutMapping("/{id}")
-    public ResponseEntity<Solicitud> modificarSolicitud(@PathVariable Long id, @RequestBody Solicitud datosNuevos) {
-        Solicitud actualizada = solicitudService.actualizar(id, datosNuevos);
+    public ResponseEntity<SolicitudResponseDTO> modificarSolicitud(@PathVariable Long id, @RequestBody SolicitudCreateDTO datosNuevos) {
+        SolicitudResponseDTO actualizada = solicitudService.actualizarSolicitudDesdeDTO(id, datosNuevos);
         if (actualizada == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(actualizada);
     }
@@ -74,8 +77,8 @@ public class SolicitudController {
     @GetMapping("/buscar")
     public ResponseEntity<List<Solicitud>> buscarSolicitudes(
             @RequestParam(required = false) Long idUsuario,
-            @RequestParam(required = false) String estado) {
-
+            @RequestParam(required = false) String estado)
+    {
         List<Solicitud> resultado;
 
         if (idUsuario != null && estado != null) {
@@ -85,7 +88,8 @@ public class SolicitudController {
         } else if (estado != null) {
             resultado = solicitudService.obtenerPorEstado(estado);
         } else {
-            resultado = solicitudService.obtenerTodos();
+            Pageable pageable = PageRequest.of(0, 10, Sort.by("fechaHoraSolicitud").descending());
+            resultado = solicitudService.obtenerTodasPaginadas(pageable).getContent();
         }
 
         if (resultado.isEmpty()) return ResponseEntity.noContent().build();
