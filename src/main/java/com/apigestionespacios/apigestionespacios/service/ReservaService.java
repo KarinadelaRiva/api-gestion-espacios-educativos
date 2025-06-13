@@ -20,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -281,8 +282,11 @@ public class ReservaService {
      * @return Lista de CronogramaEspaciosDTO con las reservas agrupadas por espacio.
      */
     public List<CronogramaEspaciosDTO> obtenerCronogramaDTOParaFecha(LocalDate fecha) {
+        DiaSemana diaEnum = DiaSemana.desdeDayOfWeek(fecha.getDayOfWeek()); // Tu enum DiaSemana tiene LUNES, MARTES, etc.
 
-        List<ReservaResponseDTO> reservasResponse = listaReservasAReservasResponseDTO(reservaRepository.findReservasPorFecha(fecha));
+        List<ReservaResponseDTO> reservasResponse = listaReservasAReservasResponseDTO(
+                reservaRepository.findReservasActivasParaFecha(fecha, diaEnum)
+        );
 
         return reservasResponse.stream()
                 .collect(Collectors.groupingBy(
@@ -292,7 +296,7 @@ public class ReservaService {
                 ))
                 .values().stream()
                 .map(reservaResponseDTOS -> {
-                    ReservaResponseDTO primeraReserva = reservaResponseDTOS.getFirst(); // Para obtener el nombre del espacio
+                    ReservaResponseDTO primeraReserva = reservaResponseDTOS.getFirst();
                     return CronogramaEspaciosDTO.builder()
                             .nombreEspacio(primeraReserva.getNombreEspacio())
                             .reservas(reservaResponseDTOS)

@@ -93,4 +93,13 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
     List<Reserva> findReservasActivasPorComisionOrdenadas(
             @Param("comisionId") Long comisionId);
 
+    /**
+     * Busca reservas activas para una fecha específica y un día de la semana.
+     *
+     * @param fecha Fecha a consultar.
+     * @param dia Día de la semana.
+     * @return Lista de reservas activas que coinciden con la fecha y el día.
+     */
+    @Query("SELECT r FROM Reserva r WHERE :fecha BETWEEN r.fechaInicio AND r.fechaFin AND r.dia = :dia")
+    List<Reserva> findReservasActivasParaFecha(@Param("fecha") LocalDate fecha, @Param("dia") DiaSemana dia);
 }
